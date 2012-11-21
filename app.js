@@ -6,10 +6,7 @@ var db = require("mongojs").connect("5c3", collections);
 var app = express();
 app.use(express.bodyParser());
 
-//say hello
-app.get("/", function(req, res) {
-    res.send(200,"Hi, this is 5c3 API.")
-});
+app.use(express.static(__dirname + '/public'));
 
 //register view
 app.post('/viewcount', function(req, res) {

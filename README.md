@@ -1,5 +1,9 @@
 # 5c3 – a HTML5 viewer for 29c3
 
+## API description
+POST `/viewcount` Parameters: event, duration
+GET `/viewcount/event`
+
 ## Backend setup instructions
 5c3 features a HTTP-REST-backend using node.js and MongoDB.
 

@@ -1,0 +1,7 @@
+@import url(reset_some_things.css);
+
+/* ----------------------------------------------------- Comment */
+
+.js div { } /* apply only on JavaScript enabled browsers */
+.ie7 div { } /* apply only on Internet Explorer 7 and below */
+.ie6 div { } /* apply only on Internet Explorer 6 and below */
