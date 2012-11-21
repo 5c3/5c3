@@ -1,0 +1,14 @@
+{
+    "name": "5c3",
+    "description": "a HTML5 congress viewer",
+    "version": "0.0.1",
+    "dependencies": {
+        "express": "3.0.2",
+        "mongojs": "0.4.5"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/5c3/5c3"
+    },
+    "scripts": {"start": "node backend.js"}
+}
