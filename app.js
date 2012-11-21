@@ -1,6 +1,6 @@
 /* setup */
 var express = require('express');
-var appPort = 3000;
+var appPort = 80;
 var collections = ["views"]
 var db = require("mongojs").connect("5c3", collections);
 var app = express();
