@@ -1,33 +1,69 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8" />
-	<title>5c3</title>
-	
-	<link href="css/screen.css" rel="stylesheet" media="screen" type="text/css" />
-	<link href="css/print.css" rel="stylesheet" media="print" type="text/css" />
-	
-	<meta name="description" content="" />
-	<meta name="robots" content="index, follow" />
-	
-	<script src="js/jwplayer.js"></script>
-	<script src="js/html5shiv.js"></script>
-	<script src="js/jquery-1.7.2.min.js"></script>
-	<script src="js/domscript.js"></script>
-	<script>document.documentElement.className += " js";</script>
-	
-	<link rel="shortcut icon" href="img/favicon.ico" type="image/vnd.microsoft.icon" />
-</head>
+<html>
+  <head>
+    <title>5c3 - The HTML5 Chaos communication congress viewer</title>
 
-<!--[if lt IE 7]><body class="ie7 ie6"><![endif]-->
-<!--[if IE 7]><body class="ie7"><![endif]-->
-<!--[if gt IE 7]><body><![endif]-->
-<!--[if !IE]><!--><body><!-- <![endif]-->
+    <!-- Bootstrap -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="css/bootstrap.dark.min.css" rel="stylesheet" media="screen">
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="http://vjs.zencdn.net/c/video-js.css" rel="stylesheet">
+    <link href="css/5c3.css" rel="stylesheet">
+  </head>
+  <body style='padding-top:40px;'>
+    <div class="container-fluid">
 
+      <div class="row-fluid">
 
-	<div id="player">Loading the player...</div>
+        <div class="span3">
+          <div class="tabbable">
+<!--             <ul class="nav nav-tabs">
+              <li class="active"><a href="#tabSchedule" data-toggle="tab">by Schedule</a></li>
+              <li><a href='#tabPopular' data-toggle="tab" >Popular</a></li>
+            </ul> -->
+            <div class="rounded-transparent tab-content" id="sidebarContent">
+              <div class="tab-pane active" id="tabSchedule">
+                <input type="text" class="search-query typeahead" placeholder='Filter List ..' data-provide="typeahead">
+                <table>
+                  <tr>
+                    <td>Hacker Jeopardy</td>
+                  </tr>
+                  <tr>
+                    <td>Hacker Jeopardy 2</td>
+                  </tr>
+                </table>
+              </div>
+              <div class="tab-pane" id="tabPopular">
+                <input type="text" class="search-query" placeholder="Search...">
+                <table>
+                  <tr>
+                    <td>Hacker Jeopardy</td>
+                  </tr>
+                  <tr>
+                    <td>Hacker Jeopardy 2</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
 
-
-	
-</body>
+        <div class="span9">
+          <!--Body content-->
+          <h2>Hacker Jeopardy</h2>
+          <video id="my_video_1" class="video-js vjs-default-skin" controls
+            preload="auto" width="640" height="360" poster="http://static.media.ccc.de/media/congress/2011/28c3-4676-en-apple_vs_google_client_platforms_h264_preview.jpg"
+            data-setup="{}">
+            <source type="video/mp4" src="http://media.ccc.de/ftp/congress/2011/mp4-h264-HQ/28c3-4676-en-apple_vs_google_client_platforms_h264.mp4">
+            <source type="video/webm" src="http://media.ccc.de/ftp/congress/2011/webm/28c3-4676-en-apple_vs_google_client_platforms.webm">
+          </video>
+        </div>
+      </div>
+    </div>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/5c3.js"></script>
+    <script src="js/xml2json.js"</script>
+    <script src="http://vjs.zencdn.net/c/video.js"></script>
+  </body>
 </html>

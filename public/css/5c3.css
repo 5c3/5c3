@@ -1,0 +1,21 @@
+body{
+	background-image: url('../img/black_pattern01.jpg');
+}
+#sidebarContent{
+	overflow: auto;
+}
+.container-fluid{
+	padding-left: 0px;
+}
+.rounded-transparent{
+	border-radius: 15px;
+	border: 1px solid #303030;
+	background: rgba(80, 80, 80, 0.3);
+	padding: 10px;
+}
+.nav-tabs li a{
+	background: rgba(80, 80, 80, 0.3);
+}
+.nav-tabs li.active a{
+	background: rgba(180, 180, 180, 0.3);
+}
