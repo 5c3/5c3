@@ -2,6 +2,7 @@
 
 ## API description
 POST `/viewcount` Parameters: event, duration
+
 GET `/viewcount/event`
 
 ## Backend setup instructions
@@ -9,11 +10,13 @@ GET `/viewcount/event`
 
 1. Install node.js
  - `brew install node` (for Mac OS using Homebrew)
- - `curl http://npmjs.org/install.sh | sh` (Install Node packet manager npm)
+ - `curl https://npmjs.org/install.sh | sh` (Install Node packet manager npm)
  - `npm install supervisor -g` (not necessary, you can run the backend using `node` as well)
+ -  `npm install express`
+ -  `npm install mongojs`
 
 2. Install mongoDB
  - `brew install mongodb`
 
 3. Run the backend
- - `supervisor backend.js`
+ - `supervisor app.js`
