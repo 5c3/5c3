@@ -11,6 +11,7 @@
       this.events = [];
       this.typeaheadStrings;
       this.lastFullScreenItem;
+      this.player;
       this.isotopeContainer = $('#eventItems');
       this.isotopeContainer.isotope({
         itemSelector: '.item',
@@ -53,6 +54,7 @@
                 </div>');
         item.click(function(e) {
           console.log(_this.lastFullScreenItem);
+          item.addClass(active);
           if (_this.lastFullScreenItem) {
             _this.lastFullScreenItem.css('width', '');
             _this.lastFullScreenItem.css('height', '');
