@@ -63,52 +63,39 @@ class FiveC3
                 async: false
             )    
 
-    writeEvents: () ->
+    writeEvents: () =>
         console.log($('#eventItems'))
         for evnt in @events
             item = $(@templates.item(evnt))
-            item.click( (e)=>
-                if @lastFullScreenItem
-                    @lastFullScreenItem.css('width', '')
-                    @lastFullScreenItem.css('height', '')
-                item = $(e.target)
-                if ! item.hasClass('item')
-                    item = item.parents('.item')
-                console.log(item)
-                item.width(640)
-                item.height(360)
-                @isotopeContainer.isotope('reLayout')
-                @lastFullScreenItem = $(item)
-            )
-            @isotopeContainer.isotope('insert',item)
-            # item.appendTo($('#eventItems'))
+            @isotopeContainer.isotope('insert',item, @itemAdded)
+
+    onItemClick: (e) =>
+        if @lastFullScreenItem
+            @lastFullScreenItem.css('width', '')
+            @lastFullScreenItem.css('height', '')
+        item = $(e.target)
+        if ! item.hasClass('item')
+            item = item.parents('.item')
+        item.width(640)
+        item.height(360)
+        @isotopeContainer.isotope('reLayout')
+        @lastFullScreenItem = $(item)
+
+    onItemMouseMove: (e) =>
+        # 
+
             # ...
-
-
-        
-        
+    itemAdded: (addedItem) =>
+        addedItem.click(@onItemClick)
+        addedItem.mousemove(@onItemMouseMove)
+                
 
     refreshEventData: () ->
         $.ajax( 
-            url:'testdata/schedule.en.xml'
-            datatype: 'xml'
-            success: (dataFromServer) => 
-                @events = []
-                $('event',dataFromServer).each (index, eventDom) =>
-                    evnt = {}
-                    evnt.start = $('start',eventDom).text()
-                    evnt.id = $(eventDom).attr('id')
-                    evnt.duration = $('duration',eventDom).text()
-                    evnt.title = $('title',eventDom).text()
-                    evnt.subtitle = $('subtitle',eventDom).text()
-                    # $('person',eventDom).each (index, personDom) =>
-                    #     person = @typeaheadStrings.push($(personDom).text())
-                    #     if person not in @typeaheadStrings
-                    #         @typeaheadStrings.push($(personDom).text())
-
-                    # @typeaheadStrings.push(evnt.title)
-                    # @typeaheadStrings.push(evnt.title)
-                    @events.push(evnt)
+            url:'events'
+            datatype: 'json'
+            success: (dataFromServer) =>
+                @events = dataFromServer
                 @writeEvents()
             async: true
         )

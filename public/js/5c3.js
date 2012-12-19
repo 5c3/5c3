@@ -8,6 +8,14 @@
   FiveC3 = (function() {
 
     function FiveC3() {
+      this.itemAdded = __bind(this.itemAdded, this);
+
+      this.onItemMouseMove = __bind(this.onItemMouseMove, this);
+
+      this.onItemClick = __bind(this.onItemClick, this);
+
+      this.writeEvents = __bind(this.writeEvents, this);
+
       this.getTemplates = __bind(this.getTemplates, this);
 
       var templateFiles, typeaheadOptions;
@@ -53,51 +61,48 @@
     };
 
     FiveC3.prototype.writeEvents = function() {
-      var evnt, item, _i, _len, _ref, _results,
-        _this = this;
+      var evnt, item, _i, _len, _ref, _results;
       console.log($('#eventItems'));
       _ref = this.events;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         evnt = _ref[_i];
         item = $(this.templates.item(evnt));
-        item.click(function(e) {
-          if (_this.lastFullScreenItem) {
-            _this.lastFullScreenItem.css('width', '');
-            _this.lastFullScreenItem.css('height', '');
-          }
-          item = $(e.target);
-          if (!item.hasClass('item')) {
-            item = item.parents('.item');
-          }
-          console.log(item);
-          item.width(640);
-          item.height(360);
-          _this.isotopeContainer.isotope('reLayout');
-          return _this.lastFullScreenItem = $(item);
-        });
-        _results.push(this.isotopeContainer.isotope('insert', item));
+        _results.push(this.isotopeContainer.isotope('insert', item, this.itemAdded));
       }
       return _results;
+    };
+
+    FiveC3.prototype.onItemClick = function(e) {
+      var item;
+      if (this.lastFullScreenItem) {
+        this.lastFullScreenItem.css('width', '');
+        this.lastFullScreenItem.css('height', '');
+      }
+      item = $(e.target);
+      if (!item.hasClass('item')) {
+        item = item.parents('.item');
+      }
+      item.width(640);
+      item.height(360);
+      this.isotopeContainer.isotope('reLayout');
+      return this.lastFullScreenItem = $(item);
+    };
+
+    FiveC3.prototype.onItemMouseMove = function(e) {};
+
+    FiveC3.prototype.itemAdded = function(addedItem) {
+      addedItem.click(this.onItemClick);
+      return addedItem.mousemove(this.onItemMouseMove);
     };
 
     FiveC3.prototype.refreshEventData = function() {
       var _this = this;
       return $.ajax({
-        url: 'testdata/schedule.en.xml',
-        datatype: 'xml',
+        url: 'events',
+        datatype: 'json',
         success: function(dataFromServer) {
-          _this.events = [];
-          $('event', dataFromServer).each(function(index, eventDom) {
-            var evnt;
-            evnt = {};
-            evnt.start = $('start', eventDom).text();
-            evnt.id = $(eventDom).attr('id');
-            evnt.duration = $('duration', eventDom).text();
-            evnt.title = $('title', eventDom).text();
-            evnt.subtitle = $('subtitle', eventDom).text();
-            return _this.events.push(evnt);
-          });
+          _this.events = dataFromServer;
           return _this.writeEvents();
         },
         async: true
