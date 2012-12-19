@@ -8,16 +8,36 @@ body{
 
 .item{
 	display: block;
-	width: 250px;
-	height: 120px;
+	width: 240px;
+	height: 135px;
 	padding: 5px;
 	background: rgba(200, 54, 54, 0.5); 
 	color: red;
 	margin: 10px;
+	position: relative;
 }
 
-.item h3{
-	font-size: 12px;
+.item .info {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	background: rgba(255,255,255,0.25);
+	color: white;
+	width: 100%;
+	padding: 5px 0px;
+}
+
+.item h1, .item h2 {
+	margin: 0;
+	padding: 5px 10px;
+	color: white;
+	font-size: 1em;
+	line-height: 1em;
+	overflow: hidden;
+}
+
+.item h1 {
+	font-size: 1.2em;
 }
 
 

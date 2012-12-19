@@ -55,7 +55,10 @@ class FiveC3
         console.log($('#eventItems'))
         for evnt in @events
             # console.log(evnt.title)
-            item = $('<div class="item" id="evnt_' + evnt.id + '"><h3>' + evnt.title + '</h3></div>')
+            item = $('<div class="item" id="evnt_' + evnt.id + '">
+                <h1>' + evnt.title + '</h1>
+                <h2>' + evnt.subtitle + '</h2>
+                </div>')
             item.click( (e)=>
                 console.log(@lastFullScreenItem)
                 if @lastFullScreenItem
