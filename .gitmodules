@@ -4,3 +4,6 @@
 [submodule "node_modules/express"]
 	path = node_modules/express
 	url = https://github.com/visionmedia/express
+[submodule "isotope"]
+	path = public/js/isotope
+	url = https://github.com/desandro/isotope.git

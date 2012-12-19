@@ -25,52 +25,87 @@ top = this
 
 
 class FiveC3
-	constructor: () ->
-		@events = []
-		@typeaheadStrings = []
+    constructor: () ->
+        @events = []
+        @typeaheadStrings
+        @lastFullScreenItem
+        
+        @isotopeContainer = $('#eventItems')
+        @isotopeContainer.isotope({
+          itemSelector : '.item',
+          layoutMode : 'masonry'
+        })
 
-		@resizeSidebar()
-		$(window).resize(@resizeSidebar)
-		@refreshEventData()
+        $(window).resize( () ->
+            console.log('resized')
+        )
 
-		typeaheadOptions = {
-			minLenght: 2
-			source: @typeaheadStrings
-		}
-		$('.typeahead').typeahead(typeaheadOptions)
-		
+        
 
-	refreshEventData: () ->
-		$.ajax( 
+        @refreshEventData()
+
+        typeaheadOptions = {
+          minLenght: 2
+          source: @typeaheadStrings
+        }
+        $('.typeahead').typeahead(typeaheadOptions)
+
+
+    writeEvents: () ->
+        console.log($('#eventItems'))
+        for evnt in @events
+            # console.log(evnt.title)
+            item = $('<div class="item" id="evnt_' + evnt.id + '"><h3>' + evnt.title + '</h3></div>')
+            item.click( (e)=>
+                console.log(@lastFullScreenItem)
+                if @lastFullScreenItem
+                    @lastFullScreenItem.css('width', '')
+                    @lastFullScreenItem.css('height', '')
+                item = $(e.target)
+                if ! item.hasClass('item')
+                    item = item.parents('.item')
+                console.log(item)
+                item.width(640)
+                item.height(360)
+                @isotopeContainer.isotope('reLayout')
+                @lastFullScreenItem = $(item)
+            )
+            @isotopeContainer.isotope('insert',item)
+            # item.appendTo($('#eventItems'))
+            # ...
+
+
+        
+        
+
+    refreshEventData: () ->
+        $.ajax( 
             url:'testdata/schedule.en.xml'
             datatype: 'xml'
             success: (dataFromServer) => 
-            	@events = []
-            	$('event',dataFromServer).each (index, eventDom) =>
-            		evnt = {}
-            		evnt.start = $('start',eventDom).text()
-            		evnt.id = $(eventDom).attr('id')
-            		evnt.duration = $('duration',eventDom).text()
-            		evnt.title = $('title',eventDom).text()
-            		evnt.subtitle = $('subtitle',eventDom).text()
-            		$('person',eventDom).each (index, personDom) =>
-            			person = @typeaheadStrings.push($(personDom).text())
-            			console.log($.inArray(person, @typeaheadStrings))
-            			if person not in @typeaheadStrings
-            				@typeaheadStrings.push($(personDom).text())
+                @events = []
+                $('event',dataFromServer).each (index, eventDom) =>
+                    evnt = {}
+                    evnt.start = $('start',eventDom).text()
+                    evnt.id = $(eventDom).attr('id')
+                    evnt.duration = $('duration',eventDom).text()
+                    evnt.title = $('title',eventDom).text()
+                    evnt.subtitle = $('subtitle',eventDom).text()
+                    # $('person',eventDom).each (index, personDom) =>
+                    #     person = @typeaheadStrings.push($(personDom).text())
+                    #     if person not in @typeaheadStrings
+                    #         @typeaheadStrings.push($(personDom).text())
 
-            		@typeaheadStrings.push(evnt.title)
-            		@typeaheadStrings.push(evnt.title)
-            		@events.push(evnt)
+                    # @typeaheadStrings.push(evnt.title)
+                    # @typeaheadStrings.push(evnt.title)
+                    @events.push(evnt)
+                @writeEvents()
             async: true
         )
-
-
-
-	resizeSidebar: () ->
-		$('#sidebarContent').height($(window).height() - 80)
-	
+    
 
 $(document).ready( ->
     top.fiveC3 = new FiveC3()
 )
+
+
