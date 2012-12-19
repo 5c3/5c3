@@ -36,8 +36,21 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         evnt = _ref[_i];
         item = $('<div class="item" id="evnt_' + evnt.id + '">\
+                <img class="thumbnail" src="' + evnt.id + '/1.jpg" alt="" />\
+                <img class="thumbnail" src="' + evnt.id + '/2.jpg" alt="" />\
+                <img class="thumbnail" src="' + evnt.id + '/3.jpg" alt="" />\
+                <img class="thumbnail" src="' + evnt.id + '/4.jpg" alt="" />\
+                <img class="thumbnail" src="' + evnt.id + '/5.jpg" alt="" />\
+                <video src="http://media.ccc.de/ftp/congress/2011/mp4-h264-HQ/28c3-4676-en-apple_vs_google_client_platforms_h264.mp4" type="video/mp4" \
+                  id="player" \
+                  width="640" height="360" style="width: 100%; height: 100%;"\
+                  controls="controls" preload="none">\
+                      <track kind="subtitles" src="captions.en.srt" srclang="en" />\
+                  </video>  \
+                <div class="info">\
                 <h1>' + evnt.title + '</h1>\
-                <h2>' + evnt.subtitle + '</h2>\
+                <h2>' + evnt.subtitle + '</h2></div>"\
+                \
                 </div>');
         item.click(function(e) {
           console.log(_this.lastFullScreenItem);

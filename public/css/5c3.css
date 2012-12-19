@@ -1,5 +1,5 @@
 body{
-	background-image: url('../img/black_pattern01.jpg');
+	background: url('../img/black_pattern01.jpg') fixed;
 }
 
 /*#isotopeContainer{
@@ -10,10 +10,10 @@ body{
 	display: block;
 	width: 240px;
 	height: 135px;
-	padding: 5px;
 	background: rgba(200, 54, 54, 0.5); 
 	color: red;
 	margin: 1px;
+	padding: 0;
 	position: relative;
 }
 
@@ -34,10 +34,30 @@ body{
 	font-size: 1em;
 	line-height: 1em;
 	overflow: hidden;
+	-webkit-hyphens: auto;
+	-moz-hyphens: auto;
+	-ms-hyphens: auto;
+	hyphens: auto;
+
 }
 
 .item h1 {
 	font-size: 1.2em;
+}
+
+.item video {
+	display: none;
+	width: 100%;
+	height: 100%;
+}
+
+.item .thumbnail {
+	position: absolute;
+	padding: 0;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
 }
 
 
