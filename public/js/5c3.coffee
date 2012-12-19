@@ -29,6 +29,7 @@ class FiveC3
         @events = []
         @typeaheadStrings
         @lastFullScreenItem
+        @player
         
         @isotopeContainer = $('#eventItems')
         @isotopeContainer.isotope({
@@ -40,7 +41,7 @@ class FiveC3
             console.log('resized')
         )
 
-        @getTemplates()
+        #@getTemplates()
 
         
 
@@ -75,6 +76,10 @@ class FiveC3
                 </div>')
             item.click( (e)=>
                 console.log(@lastFullScreenItem)
+                #$('.item').removeClass('active')
+                #item.addClass(active)
+                #player = new MediaElementPlayer(item.children("video"))
+                #player.play()
                 if @lastFullScreenItem
                     @lastFullScreenItem.css('width', '')
                     @lastFullScreenItem.css('height', '')
