@@ -7,6 +7,3 @@
 [submodule "node_modules/xml2js"]
 	path = node_modules/xml2js
 	url = https://github.com/Leonidas-from-XIV/node-xml2js.git
-[submodule "public/js/dot"]
-	path = public/js/dot
-	url = git://github.com/olado/doT.git
