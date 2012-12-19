@@ -40,6 +40,8 @@ class FiveC3
             console.log('resized')
         )
 
+        @getTemplates()
+
         
 
         @refreshEventData()
@@ -49,7 +51,6 @@ class FiveC3
           source: @typeaheadStrings
         }
         $('.typeahead').typeahead(typeaheadOptions)
-
 
     writeEvents: () ->
         console.log($('#eventItems'))
