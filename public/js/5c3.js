@@ -20,7 +20,6 @@
       $(window).resize(function() {
         return console.log('resized');
       });
-      this.getTemplates();
       this.refreshEventData();
       typeaheadOptions = {
         minLenght: 2,
@@ -54,7 +53,6 @@
                 </div>');
         item.click(function(e) {
           console.log(_this.lastFullScreenItem);
-          item.addClass(active);
           if (_this.lastFullScreenItem) {
             _this.lastFullScreenItem.css('width', '');
             _this.lastFullScreenItem.css('height', '');
