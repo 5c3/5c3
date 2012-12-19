@@ -8,7 +8,7 @@ POST `/event/0000` increase popularity for event #0000
 
 GET `/events` get JSON of all events
 
-POST `/events` Parameter `url` import/update Pentabarf-XML from URL
+POST `/events` Parameter `url` import/update Pentabarf-XML from URL (requires authorization)
 
 
 
@@ -17,7 +17,6 @@ POST `/events` Parameter `url` import/update Pentabarf-XML from URL
 
 1. Install node.js
  - `brew install node` (for Mac OS using Homebrew)
-
  - `npm install supervisor -g` (not necessary, you can run the backend using `node` as well)
  -  `npm install express`
  -  `npm install mongojs`

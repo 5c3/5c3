@@ -1,12 +1,21 @@
 /* setup */
+var appPort = 1234;
+var password = "asd";
+
 var express = require('express');
-var appPort = 80;
 var collections = ["events"]
 var db = require("mongojs").connect("5c3", collections);
 var app = express();
 var http = require('http');
 app.use(express.bodyParser());
 app.use(express.static(__dirname + '/public'));
+
+
+//authentication
+var adminAuth = express.basicAuth(function(user,pwd) {
+    return (pwd = password);
+}, 'Restrict area, please identify');
+
 
 //register view
 app.post(/event\/(.+)/, function(req, res) {
@@ -41,7 +50,7 @@ app.get('/events', function(req, res) {
 
 
 
-app.post('/events', function(req, res) {
+app.post('/events',adminAuth, function(req, res) {
     
     xml2js = require('xml2js');
     
