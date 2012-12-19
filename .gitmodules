@@ -4,9 +4,6 @@
 [submodule "node_modules/express"]
 	path = node_modules/express
 	url = https://github.com/visionmedia/express
-[submodule "isotope"]
-	path = public/js/isotope
-	url = https://github.com/desandro/isotope.git
 [submodule "node_modules/xml2js"]
 	path = node_modules/xml2js
 	url = https://github.com/Leonidas-from-XIV/node-xml2js.git
