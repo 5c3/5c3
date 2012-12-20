@@ -5,6 +5,19 @@
 
   top = this;
 
+  top.replaceHtml = function(el, html) {
+    var newEl, oldEl;
+    if (typeof el === 'string') {
+      oldEl = document.getElementById(el);
+    } else {
+      oldEl = el;
+    }
+    newEl = oldEl.cloneNode(false);
+    newEl.innerHTML = html;
+    oldEl.parentNode.replaceChild(newEl, oldEl);
+    return newEl;
+  };
+
   FiveC3 = (function() {
 
     function FiveC3() {
@@ -14,33 +27,20 @@
 
       this.onItemClick = __bind(this.onItemClick, this);
 
+      this.writtenEvents = __bind(this.writtenEvents, this);
+
       this.writeEvents = __bind(this.writeEvents, this);
 
       this.getTemplates = __bind(this.getTemplates, this);
 
-      var templateFiles, typeaheadOptions;
+      var templateFiles;
       this.events = [];
       this.typeaheadStrings;
       this.lastFullScreenItem;
       this.player;
       this.templates = {};
-      this.isotopeContainer = $('#eventItems');
-      this.isotopeContainer.isotope({
-        itemSelector: '.item',
-        layoutMode: 'masonry',
-        animationMode: 'css'
-      });
-      $(window).resize(function() {
-        return console.log('resized');
-      });
-      templateFiles = ['item'];
+      templateFiles = ['item', 'items'];
       this.getTemplates(templateFiles);
-      this.refreshEventData();
-      typeaheadOptions = {
-        minLenght: 2,
-        source: this.typeaheadStrings
-      };
-      $('.typeahead').typeahead(typeaheadOptions);
     }
 
     FiveC3.prototype.getTemplates = function(templateFiles) {
@@ -60,17 +60,39 @@
       return _results;
     };
 
-    FiveC3.prototype.writeEvents = function() {
-      var evnt, item, _i, _len, _ref, _results;
-      console.log($('#eventItems'));
-      _ref = this.events;
+    FiveC3.prototype.writeEvents = function(cb) {
+      var items;
+      items = this.templates.items(this.events);
+      top.replaceHtml("isotopeContainer", items);
+      return $('#isotopeContainer').isotope({
+        itemSelector: '.item',
+        layoutMode: 'masonry',
+        animationMode: 'css'
+      }, cb);
+    };
+
+    FiveC3.prototype.writtenEvents = function(items) {
+      var item, _i, _len, _results;
       _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        evnt = _ref[_i];
-        item = $(this.templates.item(evnt));
-        _results.push(this.isotopeContainer.isotope('insert', item, this.itemAdded));
+      for (_i = 0, _len = items.length; _i < _len; _i++) {
+        item = items[_i];
+        $(item).click(this.onItemClick);
+        _results.push($(item).mousemove(this.onItemMouseMove));
       }
       return _results;
+    };
+
+    FiveC3.prototype.refreshEventData = function() {
+      var _this = this;
+      return $.ajax({
+        url: 'events',
+        datatype: 'json',
+        success: function(dataFromServer) {
+          _this.events = dataFromServer;
+          return _this.writeEvents(_this.writtenEvents);
+        },
+        async: true
+      });
     };
 
     FiveC3.prototype.onItemClick = function(e) {
@@ -83,9 +105,9 @@
       if (!item.hasClass('item')) {
         item = item.parents('.item');
       }
-      item.width(640);
-      item.height(360);
-      this.isotopeContainer.isotope('reLayout');
+      item.width(740);
+      item.height(425);
+      $('#isotopeContainer').isotope('reLayout');
       return this.lastFullScreenItem = $(item);
     };
 
@@ -96,25 +118,13 @@
       return addedItem.mousemove(this.onItemMouseMove);
     };
 
-    FiveC3.prototype.refreshEventData = function() {
-      var _this = this;
-      return $.ajax({
-        url: 'events',
-        datatype: 'json',
-        success: function(dataFromServer) {
-          _this.events = dataFromServer;
-          return _this.writeEvents();
-        },
-        async: true
-      });
-    };
-
     return FiveC3;
 
   })();
 
   $(document).ready(function() {
-    return top.fiveC3 = new FiveC3();
+    top.fiveC3 = new FiveC3();
+    return top.fiveC3.refreshEventData();
   });
 
 }).call(this);
