@@ -87,8 +87,9 @@ class FiveC3
         console.log('Resized')
         timeResize = new Date().getTime()
 
-        @updateItemWidth()      
-        @writeEvents()
+        @updateItemWidth()
+        $('.item').width(@itemWidth).height(@itemHeight)      
+        # @writeEvents()
 
         timeEndResize = new Date().getTime()
         timeDeltaResize = timeEndResize - timeResize
@@ -138,19 +139,34 @@ class FiveC3
     onItemClick: (e) =>
         console.log('Click')
         item = $(e.currentTarget)
-        itemNumber = item.attr('data-number')
-        nextIndex = (@columns - itemNumber % @columns) - 1
-        lastItemInRow = item.nextAll(':eq(' + nextIndex + ')')
-        if @lastPopunder
-            @lastPopunder.animate({height:'0px'})
-            setTimeout(2000, =>
-                @lastPopunder.remove())
-        
-        # Insert spacer after last div in this row
-        popunder = $(@templates.popunder())
-        popunder.insertAfter(lastItemInRow)
-        popunder.animate({height:'400px'})
-        @lastPopunder = popunder
+        item.id = item.attr('id')
+        console.log(item.id)
+        if @lastActiveItemId != item.id
+            if @popunderContainer
+                @popunderContainer.animate(
+                    {height:'0px'},
+                    400,
+                    -> $(this).remove()
+                )
+
+            itemNumber = item.attr('data-number')
+            nextIndex = (@columns - itemNumber % @columns) - 1
+            console.log(nextIndex)
+            if @columns - 1 == nextIndex
+                lastItemInRow = item
+            else
+                lastItemInRow = item.nextAll(':eq(' + nextIndex + ')')
+            if @lastPopunder
+                @lastPopunder.animate({height:'0px'})
+                setTimeout(2000, =>
+                    @lastPopunder.remove())
+            
+            # Insert spacer after last div in this row
+            @popunderContainer = $(@templates.popunder())
+            @popunderContainer.insertAfter(lastItemInRow)
+            @popunderContainer.animate({height:'400px'})
+
+        @lastActiveItemId = item.id
         
 
         

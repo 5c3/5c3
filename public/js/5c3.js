@@ -117,7 +117,7 @@
       console.log('Resized');
       timeResize = new Date().getTime();
       this.updateItemWidth();
-      this.writeEvents();
+      $('.item').width(this.itemWidth).height(this.itemHeight);
       timeEndResize = new Date().getTime();
       timeDeltaResize = timeEndResize - timeResize;
       return console.log('Resize took ' + timeDeltaResize + ' ms');
@@ -175,27 +175,43 @@
     };
 
     FiveC3.prototype.onItemClick = function(e) {
-      var item, itemNumber, lastItemInRow, nextIndex, popunder,
+      var item, itemNumber, lastItemInRow, nextIndex,
         _this = this;
       console.log('Click');
       item = $(e.currentTarget);
-      itemNumber = item.attr('data-number');
-      nextIndex = (this.columns - itemNumber % this.columns) - 1;
-      lastItemInRow = item.nextAll(':eq(' + nextIndex + ')');
-      if (this.lastPopunder) {
-        this.lastPopunder.animate({
-          height: '0px'
-        });
-        setTimeout(2000, function() {
-          return _this.lastPopunder.remove();
+      item.id = item.attr('id');
+      console.log(item.id);
+      if (this.lastActiveItemId !== item.id) {
+        if (this.popunderContainer) {
+          this.popunderContainer.animate({
+            height: '0px'
+          }, 400, function() {
+            return $(this).remove();
+          });
+        }
+        itemNumber = item.attr('data-number');
+        nextIndex = (this.columns - itemNumber % this.columns) - 1;
+        console.log(nextIndex);
+        if (this.columns - 1 === nextIndex) {
+          lastItemInRow = item;
+        } else {
+          lastItemInRow = item.nextAll(':eq(' + nextIndex + ')');
+        }
+        if (this.lastPopunder) {
+          this.lastPopunder.animate({
+            height: '0px'
+          });
+          setTimeout(2000, function() {
+            return _this.lastPopunder.remove();
+          });
+        }
+        this.popunderContainer = $(this.templates.popunder());
+        this.popunderContainer.insertAfter(lastItemInRow);
+        this.popunderContainer.animate({
+          height: '400px'
         });
       }
-      popunder = $(this.templates.popunder());
-      popunder.insertAfter(lastItemInRow);
-      popunder.animate({
-        height: '400px'
-      });
-      return this.lastPopunder = popunder;
+      return this.lastActiveItemId = item.id;
     };
 
     FiveC3.prototype.onItemMouseMove = function(e) {};
