@@ -172,7 +172,7 @@ class FiveC3
             @popunderContainer = $(@templates.popunder(currentEvent))
             
             @popunderContainer.insertAfter(lastItemInRow)
-            @popunderContainer.animate({height:'500px'})
+            @popunderContainer.animate({height:'380px'})
             @initPlayer(currentEvent)
 
         @lastActiveItemId = item.id
