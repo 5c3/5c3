@@ -39,7 +39,7 @@ class FiveC3
         @player
         @activeEvent
         @templates = {} # Contains the template functions
-        templateFiles = ['item', 'items'] # Provide a list of files to fetch. Leave .html away
+        templateFiles = ['item', 'items','popunder'] # Provide a list of files to fetch. Leave .html away
         @getTemplates(templateFiles)
         @minItemWidth = 310
         # 240 x 135
@@ -60,6 +60,13 @@ class FiveC3
             return false
         )
 
+        i = 1
+        for item in @filteredEvents
+            item.number = i
+            i = i + 1
+            # ...
+        
+
     moduleFilter: (object,index,array) =>
         for filtervalue in @filters.module.values
             if(object[5].value == filtervalue)
@@ -68,13 +75,13 @@ class FiveC3
 
     updateItemWidth:() =>
         divWidth = $("#isotopeContainer").width()
-        columns = Math.floor(divWidth / (@minItemWidth))
+        @columns = Math.floor(divWidth / (@minItemWidth))
 
-        @itemWidth = Math.floor(divWidth / columns)
+        @itemWidth = Math.floor(divWidth / @columns)
         @itemHeight = Math.floor(@itemWidth * 135 / 240)
 
         console.log(@itemHeight + 'px')
-        console.log('Columns:' + columns)
+        console.log('Columns:' + @columns)
 
     resizeWindow: () =>
         console.log('Resized')
@@ -107,10 +114,15 @@ class FiveC3
 
     writtenEvents: (items) =>
         console.log('Written')
+        $('.item').each( ->
+            item = $(this)
+            item.click(top.fiveC3.onItemClick)
+        )
 
-        # for item in items
-        #     $(item).click(@onItemClick)
-        #     $(item).mousemove(@onItemMouseMove)             
+            # ...
+        
+        
+                        
 
     refreshEventData: () ->
         $.ajax( 
@@ -124,15 +136,25 @@ class FiveC3
         )
 
     onItemClick: (e) =>
-        if @lastFullScreenItem
-            @lastFullScreenItem.css('width', '')
-            @lastFullScreenItem.css('height', '')
-        item = $(e.target)
-        if ! item.hasClass('item')
-            item = item.parents('.item')
-        item.width(740)
-        item.height(425)
-        @lastFullScreenItem = $(item)
+        console.log('Click')
+        item = $(e.currentTarget)
+        itemNumber = item.attr('data-number')
+        nextIndex = (@columns - itemNumber % @columns) - 1
+        lastItemInRow = item.nextAll(':eq(' + nextIndex + ')')
+        if @lastPopunder
+            @lastPopunder.animate({height:'0px'})
+            setTimeout(2000, =>
+                @lastPopunder.remove())
+        
+        # Insert spacer after last div in this row
+        popunder = $(@templates.popunder())
+        popunder.insertAfter(lastItemInRow)
+        popunder.animate({height:'400px'})
+        @lastPopunder = popunder
+        
+
+        
+        
 
     onItemMouseMove: (e) =>
         # 

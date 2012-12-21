@@ -52,7 +52,7 @@
       this.player;
       this.activeEvent;
       this.templates = {};
-      templateFiles = ['item', 'items'];
+      templateFiles = ['item', 'items', 'popunder'];
       this.getTemplates(templateFiles);
       this.minItemWidth = 310;
       this.itemHeight = 135;
@@ -62,12 +62,13 @@
     }
 
     FiveC3.prototype.filterEvents = function(filterattributes) {
-      var _this = this;
+      var i, item, _i, _len, _ref, _results,
+        _this = this;
       console.log('Filtering');
       this.filterattributes = filterattributes;
       console.log(this.filterattributes);
       this.filteredEvents = this.events.slice(0);
-      return this.filteredEvents = this.filteredEvents.filter(function(event) {
+      this.filteredEvents = this.filteredEvents.filter(function(event) {
         var k, v, _ref;
         _ref = _this.filterattributes;
         for (k in _ref) {
@@ -78,6 +79,15 @@
         }
         return false;
       });
+      i = 1;
+      _ref = this.filteredEvents;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        item.number = i;
+        _results.push(i = i + 1);
+      }
+      return _results;
     };
 
     FiveC3.prototype.moduleFilter = function(object, index, array) {
@@ -93,13 +103,13 @@
     };
 
     FiveC3.prototype.updateItemWidth = function() {
-      var columns, divWidth;
+      var divWidth;
       divWidth = $("#isotopeContainer").width();
-      columns = Math.floor(divWidth / this.minItemWidth);
-      this.itemWidth = Math.floor(divWidth / columns);
+      this.columns = Math.floor(divWidth / this.minItemWidth);
+      this.itemWidth = Math.floor(divWidth / this.columns);
       this.itemHeight = Math.floor(this.itemWidth * 135 / 240);
       console.log(this.itemHeight + 'px');
-      return console.log('Columns:' + columns);
+      return console.log('Columns:' + this.columns);
     };
 
     FiveC3.prototype.resizeWindow = function() {
@@ -140,7 +150,12 @@
     };
 
     FiveC3.prototype.writtenEvents = function(items) {
-      return console.log('Written');
+      console.log('Written');
+      return $('.item').each(function() {
+        var item;
+        item = $(this);
+        return item.click(top.fiveC3.onItemClick);
+      });
     };
 
     FiveC3.prototype.refreshEventData = function() {
@@ -160,18 +175,27 @@
     };
 
     FiveC3.prototype.onItemClick = function(e) {
-      var item;
-      if (this.lastFullScreenItem) {
-        this.lastFullScreenItem.css('width', '');
-        this.lastFullScreenItem.css('height', '');
+      var item, itemNumber, lastItemInRow, nextIndex, popunder,
+        _this = this;
+      console.log('Click');
+      item = $(e.currentTarget);
+      itemNumber = item.attr('data-number');
+      nextIndex = (this.columns - itemNumber % this.columns) - 1;
+      lastItemInRow = item.nextAll(':eq(' + nextIndex + ')');
+      if (this.lastPopunder) {
+        this.lastPopunder.animate({
+          height: '0px'
+        });
+        setTimeout(2000, function() {
+          return _this.lastPopunder.remove();
+        });
       }
-      item = $(e.target);
-      if (!item.hasClass('item')) {
-        item = item.parents('.item');
-      }
-      item.width(740);
-      item.height(425);
-      return this.lastFullScreenItem = $(item);
+      popunder = $(this.templates.popunder());
+      popunder.insertAfter(lastItemInRow);
+      popunder.animate({
+        height: '400px'
+      });
+      return this.lastPopunder = popunder;
     };
 
     FiveC3.prototype.onItemMouseMove = function(e) {};

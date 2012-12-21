@@ -9,6 +9,23 @@ body{
 img{
 	border: 0px;
 }
+.popunderspacer{
+	float: none;
+	clear: both;
+	height: 0px;
+	background: #727272; /* Old browsers */
+	margin-top: 100px;
+	background: -moz-linear-gradient(top, #727272 0%, #131313 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#727272), color-stop(100%,#131313)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #727272 0%,#131313 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #727272 0%,#131313 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #727272 0%,#131313 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #727272 0%,#131313 100%); /* W3C */
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+
+}
 .brand{
 	margin-left: 5px;
 }
