@@ -1,14 +1,16 @@
  {{~it:item}}
-	 <div class="item" id="evnt_{{=item._id}}">
-	    <img class="thumbnail" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/1.jpg" alt="" />
-	    <img class="thumbnail" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/2.jpg" alt="" />
-	    <img class="thumbnail" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/3.jpg" alt="" />
-	    <img class="thumbnail" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/4.jpg" alt="" />
-	    <img class="thumbnail" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/5.jpg" alt="" />
+	 <div class="item" id="evnt_{{=item._id}}" style="width:{{=it.itemWidth}}px; height:{{=it.itemHeight}}px;">
+	 	<div class="inneritem">
+		    <img class="thumb" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/1.jpg" alt="" />
+		    <img class="thumb" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/2.jpg" alt="" />
+		    <img class="thumb" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/3.jpg" alt="" />
+		    <img class="thumb" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/4.jpg" alt="" />
+		    <img class="thumb" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/5.jpg" alt="" />
 
-	    <div class="info">
-	        <h1>{{=item.title || ''}}</h1>
-	        <h2>{{=item.subtitle || ''}}</h2>
-	    </div>
+		    <div class="info">
+		        <h1>{{=item.title || ''}}</h1>
+		        <h2>{{=item.subtitle || ''}}</h2>
+		    </div>	 		
+	 	</div>
 	</div>
 {{~}}

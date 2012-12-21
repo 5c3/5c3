@@ -33,6 +33,14 @@
 
       this.getTemplates = __bind(this.getTemplates, this);
 
+      this.resizeWindow = __bind(this.resizeWindow, this);
+
+      this.updateItemWidth = __bind(this.updateItemWidth, this);
+
+      this.moduleFilter = __bind(this.moduleFilter, this);
+
+      this.filterEvents = __bind(this.filterEvents, this);
+
       var templateFiles;
       this.events = [];
       this.typeaheadStrings;
@@ -41,7 +49,64 @@
       this.templates = {};
       templateFiles = ['item', 'items'];
       this.getTemplates(templateFiles);
+      this.minItemWidth = 310;
+      this.itemHeight = 135;
+      $(window).resize($.debounce(100, this.resizeWindow));
+      this.updateItemWidth();
+      this.refreshEventData();
     }
+
+    FiveC3.prototype.filterEvents = function(filterattributes) {
+      var _this = this;
+      console.log('Filtering');
+      this.filterattributes = filterattributes;
+      console.log(this.filterattributes);
+      this.filteredEvents = this.events.slice(0);
+      return this.filteredEvents = this.filteredEvents.filter(function(event) {
+        var k, v, _ref;
+        _ref = _this.filterattributes;
+        for (k in _ref) {
+          v = _ref[k];
+          if (event[k] === v) {
+            return true;
+          }
+        }
+        return false;
+      });
+    };
+
+    FiveC3.prototype.moduleFilter = function(object, index, array) {
+      var filtervalue, _i, _len, _ref;
+      _ref = this.filters.module.values;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        filtervalue = _ref[_i];
+        if (object[5].value === filtervalue) {
+          return true;
+        }
+      }
+      return false;
+    };
+
+    FiveC3.prototype.updateItemWidth = function() {
+      var columns, divWidth;
+      divWidth = $("#isotopeContainer").width();
+      columns = Math.floor(divWidth / this.minItemWidth);
+      this.itemWidth = Math.floor(divWidth / columns);
+      this.itemHeight = Math.floor(this.itemWidth * 135 / 240);
+      console.log(this.itemHeight + 'px');
+      return console.log('Columns:' + columns);
+    };
+
+    FiveC3.prototype.resizeWindow = function() {
+      var timeDeltaResize, timeEndResize, timeResize;
+      console.log('Resized');
+      timeResize = new Date().getTime();
+      this.updateItemWidth();
+      this.writeEvents();
+      timeEndResize = new Date().getTime();
+      timeDeltaResize = timeEndResize - timeResize;
+      return console.log('Resize took ' + timeDeltaResize + ' ms');
+    };
 
     FiveC3.prototype.getTemplates = function(templateFiles) {
       var templateFileName, _i, _len, _results,
@@ -62,34 +127,28 @@
 
     FiveC3.prototype.writeEvents = function(cb) {
       var items;
-      items = this.templates.items(this.events);
+      this.filteredEvents.itemWidth = this.itemWidth;
+      this.filteredEvents.itemHeight = this.itemHeight;
+      items = this.templates.items(this.filteredEvents);
       top.replaceHtml("isotopeContainer", items);
-      return $('#isotopeContainer').isotope({
-        itemSelector: '.item',
-        layoutMode: 'masonry',
-        animationMode: 'css'
-      }, cb);
+      return this.writtenEvents();
     };
 
     FiveC3.prototype.writtenEvents = function(items) {
-      var item, _i, _len, _results;
-      _results = [];
-      for (_i = 0, _len = items.length; _i < _len; _i++) {
-        item = items[_i];
-        $(item).click(this.onItemClick);
-        _results.push($(item).mousemove(this.onItemMouseMove));
-      }
-      return _results;
+      return console.log('Written');
     };
 
     FiveC3.prototype.refreshEventData = function() {
       var _this = this;
       return $.ajax({
-        url: 'events',
+        url: '/events',
         datatype: 'json',
         success: function(dataFromServer) {
           _this.events = dataFromServer;
-          return _this.writeEvents(_this.writtenEvents);
+          _this.filterEvents({
+            conference: '28th Chaos Communication Congress'
+          });
+          return _this.writeEvents();
         },
         async: true
       });
@@ -107,7 +166,6 @@
       }
       item.width(740);
       item.height(425);
-      $('#isotopeContainer').isotope('reLayout');
       return this.lastFullScreenItem = $(item);
     };
 
@@ -123,8 +181,7 @@
   })();
 
   $(document).ready(function() {
-    top.fiveC3 = new FiveC3();
-    return top.fiveC3.refreshEventData();
+    return top.fiveC3 = new FiveC3();
   });
 
 }).call(this);

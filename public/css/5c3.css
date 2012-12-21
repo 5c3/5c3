@@ -1,29 +1,43 @@
 body{
 	background: url('../img/black_pattern01.jpg') fixed;
+	padding-top: 40px;
 }
 
 /*#isotopeContainer{
 	height: 500px;
 }*/
-
+img{
+	border: 0px;
+}
 .item{
 	display: block;
-	width: 240px;
+	width: 220px;
 	height: 135px;
-	background: rgba(200, 54, 54, 0.5); 
-	color: red;
-	margin: 5px;
-	padding: 0;
+	margin: 0px;
 	position: relative;
+	float: left;
+	/*background-color:blue;*/
 }
 
-.item .info {
+.inneritem{
+	position: relative;
+	display: block;
+	background-color: red;
+	margin: 5px;
+	height: 100%;
+	background: rgba(200, 54, 54, 0.5); 
+	color: red;
+}
+
+.inneritem .info {
 	position: absolute;
 	left: 0;
 	bottom: 0;
 	color: #DDDDDD;
 	width: 100%;
 	padding: 5px 0px;
+	/*margin-left: 5px;*/
+	/*margin-right: 5px;*/
 	background: rgba(0, 0, 0, 0.7); 
 }
 

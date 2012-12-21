@@ -38,9 +38,54 @@ class FiveC3
         @lastFullScreenItem
         @player
         @templates = {} # Contains the template functions
-        
         templateFiles = ['item', 'items'] # Provide a list of files to fetch. Leave .html away
         @getTemplates(templateFiles)
+        @minItemWidth = 310
+        # 240 x 135
+        @itemHeight = 135
+        $(window).resize( $.debounce(100,@resizeWindow ))
+        @updateItemWidth()
+        @refreshEventData()
+
+    filterEvents: (filterattributes) =>
+        console.log('Filtering')
+        @filterattributes = filterattributes
+        console.log(@filterattributes)
+        @filteredEvents = @events.slice(0)
+        @filteredEvents = @filteredEvents.filter( (event) =>
+            for k, v of @filterattributes
+                if event[k] == v
+                    return true
+            return false
+        )
+
+    moduleFilter: (object,index,array) =>
+        for filtervalue in @filters.module.values
+            if(object[5].value == filtervalue)
+                return true
+        return false
+
+    updateItemWidth:() =>
+        divWidth = $("#isotopeContainer").width()
+        columns = Math.floor(divWidth / (@minItemWidth))
+
+        @itemWidth = Math.floor(divWidth / columns)
+        @itemHeight = Math.floor(@itemWidth * 135 / 240)
+
+        console.log(@itemHeight + 'px')
+        console.log('Columns:' + columns)
+
+    resizeWindow: () =>
+        console.log('Resized')
+        timeResize = new Date().getTime()
+
+        @updateItemWidth()      
+        @writeEvents()
+
+        timeEndResize = new Date().getTime()
+        timeDeltaResize = timeEndResize - timeResize
+        console.log('Resize took ' + timeDeltaResize + ' ms')
+
 
     getTemplates: (templateFiles) =>
 
@@ -52,26 +97,28 @@ class FiveC3
             )
 
     writeEvents: (cb) =>
-        items = @templates.items(@events)
+        @filteredEvents.itemWidth = @itemWidth
+        @filteredEvents.itemHeight = @itemHeight
+        items = @templates.items(@filteredEvents)
         top.replaceHtml("isotopeContainer",items) # Way faster
-        $('#isotopeContainer').isotope({
-            itemSelector : '.item',
-            layoutMode : 'masonry',
-            animationMode: 'css'
-        },cb )
+        @writtenEvents()
+        
 
     writtenEvents: (items) =>
-        for item in items
-            $(item).click(@onItemClick)
-            $(item).mousemove(@onItemMouseMove)             
+        console.log('Written')
+
+        # for item in items
+        #     $(item).click(@onItemClick)
+        #     $(item).mousemove(@onItemMouseMove)             
 
     refreshEventData: () ->
         $.ajax( 
-            url:'events'
+            url:'/events'
             datatype: 'json'
             success: (dataFromServer) =>
                 @events = dataFromServer
-                @writeEvents(@writtenEvents)
+                @filterEvents({conference:'28th Chaos Communication Congress'})
+                @writeEvents()
             async: true
         )
 
@@ -84,7 +131,6 @@ class FiveC3
             item = item.parents('.item')
         item.width(740)
         item.height(425)
-        $('#isotopeContainer').isotope('reLayout')
         @lastFullScreenItem = $(item)
 
     onItemMouseMove: (e) =>
@@ -98,7 +144,6 @@ class FiveC3
 
 $(document).ready( ->
     top.fiveC3 = new FiveC3()
-    top.fiveC3.refreshEventData()
 )
 
 
