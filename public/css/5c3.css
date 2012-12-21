@@ -29,6 +29,11 @@ img{
 	color: red;
 }
 
+.inneritem .thumb {
+	width: 100%;
+	position: absolute;
+}
+
 .inneritem .info {
 	position: absolute;
 	left: 0;

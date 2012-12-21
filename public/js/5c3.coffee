@@ -37,6 +37,7 @@ class FiveC3
         @typeaheadStrings
         @lastFullScreenItem
         @player
+        @activeEvent
         @templates = {} # Contains the template functions
         templateFiles = ['item', 'items'] # Provide a list of files to fetch. Leave .html away
         @getTemplates(templateFiles)
@@ -140,6 +141,35 @@ class FiveC3
     itemAdded: (addedItem) =>
         addedItem.click(@onItemClick)
         addedItem.mousemove(@onItemMouseMove)
+        
+        
+    initPlayer: (evnt) =>
+    
+        $("#evnt_" + @activeEvent + " .player").html ""  if @activeEvent
+        $("#evnt_" + evnt._id + " .player").append "<video src=\"#\"></video>"
+    
+        videoElement = $("#evnt_" + evnt._id + " video")
+        videoElement.attr("src", evnt.video)
+        videoElement.attr("type", "video/mp4")
+        videoElement.width("100%")
+        videoElement.height("100%")
+        videoElement.attr("preload", "none")
+        videoElement.attr("poster", "/thumbs/" + evnt._id + "/poster_640.jpg")
+    
+        @player = new MediaElementPlayer(videoElement, success: (mediaElement, domObject) =>
+            @activeEvent = evnt._id
+    
+            mediaElement.addEventListener "play", ((e) =>
+                @player.timer = setInterval("fiveC3.playcount()", 20000)
+            ), false
+            mediaElement.addEventListener "pause", ((e) =>
+                clearInterval(@player.timer)
+            ), false
+        )
+    
+    playcount: =>
+        $.post "/event/" + @activeEvent, (data) ->
+
     
 
 $(document).ready( ->
