@@ -43,6 +43,25 @@ app.get(/event\/(.+)/, function(req, res) {
 
 app.get('/events', function(req, res) {
     db.events.find({},{"abstract":0, "description":0},function(err, docs) {
+        if (err) res.send(500);
+        
+        for (i=0;i<docs.length;i++) {
+            
+            duration = docs[i].duration.split(":");
+            endtime = (docs[i].timestamp + parseInt(duration[0])*3600 + parseInt([1])*60);
+            
+            if (docs[i].timestamp>new Date().getTime()/1000) docs[i].status = "upcoming";
+            else if (endtime>new Date().getTime()/1000) {
+                docs[i].status = "live";
+                if (docs[i].location == "Saal 1") docs[i].video = "http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8";
+                else if (docs[i].location == "Saal 2") docs[i].video = "http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8";
+                else if (docs[i].location == "Saal 3") docs[i].video = "http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8";
+            } else {
+                docs[i].status = "past";
+                docs[i].video = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+            }            
+        }
+        
         res.json(docs);
     });
 });
@@ -95,6 +114,11 @@ app.post('/events',adminAuth, function(req, res) {
                             obj.track = eventJson.schedule.day[i].room[j].event[e].track[0];
                             obj.type = eventJson.schedule.day[i].room[j].event[e].type[0];
                             obj.language = eventJson.schedule.day[i].room[j].event[e].language[0];
+                            
+                            dateParts = obj.date.split("-");
+                            timeParts = obj.start.split(":");
+                            
+                            obj.timestamp = new Date(parseInt(dateParts[0]), (parseInt(dateParts[1]) - 1), parseInt(dateParts[2]),parseInt(timeParts[0])+1,parseInt(timeParts[1])).getTime()/1000;
                             obj.persons = [];
                             try {
                                 for (p=0;p<eventJson.schedule.day[i].room[j].event[e].persons[0].person.length;p++) {
