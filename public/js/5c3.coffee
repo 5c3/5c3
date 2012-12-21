@@ -136,11 +136,18 @@ class FiveC3
             async: true
         )
 
+    getEventById: (id) =>
+        for evnt in @events
+            if evnt._id == id
+                return evnt
+        
+
     onItemClick: (e) =>
         console.log('Click')
         item = $(e.currentTarget)
         item.id = item.attr('id')
         console.log(item.id)
+        currentEvent = @getEventById(item.attr('data-id'))
         if @lastActiveItemId != item.id
             if @popunderContainer
                 @popunderContainer.animate(
@@ -162,9 +169,11 @@ class FiveC3
                     @lastPopunder.remove())
             
             # Insert spacer after last div in this row
-            @popunderContainer = $(@templates.popunder())
+            @popunderContainer = $(@templates.popunder(currentEvent))
+            
             @popunderContainer.insertAfter(lastItemInRow)
-            @popunderContainer.animate({height:'400px'})
+            @popunderContainer.animate({height:'500px'})
+            @initPlayer(currentEvent)
 
         @lastActiveItemId = item.id
         
@@ -182,19 +191,8 @@ class FiveC3
         
         
     initPlayer: (evnt) =>
-    
-        $("#evnt_" + @activeEvent + " .player").html ""  if @activeEvent
-        $("#evnt_" + evnt._id + " .player").append "<video src=\"#\"></video>"
-    
-        videoElement = $("#evnt_" + evnt._id + " video")
-        videoElement.attr("src", evnt.video)
-        videoElement.attr("type", "video/mp4")
-        videoElement.width("100%")
-        videoElement.height("100%")
-        videoElement.attr("preload", "none")
-        videoElement.attr("poster", "/thumbs/" + evnt._id + "/poster_640.jpg")
-    
-        @player = new MediaElementPlayer(videoElement, success: (mediaElement, domObject) =>
+        
+        @player = new MediaElementPlayer($('video'), success: (mediaElement, domObject) =>
             @activeEvent = evnt._id
     
             mediaElement.addEventListener "play", ((e) =>

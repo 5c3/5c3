@@ -31,6 +31,8 @@
 
       this.onItemClick = __bind(this.onItemClick, this);
 
+      this.getEventById = __bind(this.getEventById, this);
+
       this.writtenEvents = __bind(this.writtenEvents, this);
 
       this.writeEvents = __bind(this.writeEvents, this);
@@ -174,13 +176,25 @@
       });
     };
 
+    FiveC3.prototype.getEventById = function(id) {
+      var evnt, _i, _len, _ref;
+      _ref = this.events;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        evnt = _ref[_i];
+        if (evnt._id === id) {
+          return evnt;
+        }
+      }
+    };
+
     FiveC3.prototype.onItemClick = function(e) {
-      var item, itemNumber, lastItemInRow, nextIndex,
+      var currentEvent, item, itemNumber, lastItemInRow, nextIndex,
         _this = this;
       console.log('Click');
       item = $(e.currentTarget);
       item.id = item.attr('id');
       console.log(item.id);
+      currentEvent = this.getEventById(item.attr('data-id'));
       if (this.lastActiveItemId !== item.id) {
         if (this.popunderContainer) {
           this.popunderContainer.animate({
@@ -205,11 +219,12 @@
             return _this.lastPopunder.remove();
           });
         }
-        this.popunderContainer = $(this.templates.popunder());
+        this.popunderContainer = $(this.templates.popunder(currentEvent));
         this.popunderContainer.insertAfter(lastItemInRow);
         this.popunderContainer.animate({
-          height: '400px'
+          height: '500px'
         });
+        this.initPlayer(currentEvent);
       }
       return this.lastActiveItemId = item.id;
     };
@@ -222,20 +237,8 @@
     };
 
     FiveC3.prototype.initPlayer = function(evnt) {
-      var videoElement,
-        _this = this;
-      if (this.activeEvent) {
-        $("#evnt_" + this.activeEvent + " .player").html("");
-      }
-      $("#evnt_" + evnt._id + " .player").append("<video src=\"#\"></video>");
-      videoElement = $("#evnt_" + evnt._id + " video");
-      videoElement.attr("src", evnt.video);
-      videoElement.attr("type", "video/mp4");
-      videoElement.width("100%");
-      videoElement.height("100%");
-      videoElement.attr("preload", "none");
-      videoElement.attr("poster", "/thumbs/" + evnt._id + "/poster_640.jpg");
-      return this.player = new MediaElementPlayer(videoElement, {
+      var _this = this;
+      return this.player = new MediaElementPlayer($('video'), {
         success: function(mediaElement, domObject) {
           _this.activeEvent = evnt._id;
           mediaElement.addEventListener("play", (function(e) {
