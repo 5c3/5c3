@@ -9,6 +9,9 @@ body{
 img{
 	border: 0px;
 }
+.brand{
+	margin-left: 5px;
+}
 .item{
 	display: block;
 	width: 220px;

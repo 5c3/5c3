@@ -7,23 +7,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
-    <link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
     <link href="css/mediaelementplayer.min.css" rel="stylesheet" media="screen">
     <link href="css/5c3.css" rel="stylesheet">
+    <link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
   </head>
   <body>
-    <div class="container-fluid">
-      <div class="navbar navbar-fixed-top navbar-inverse">
+    <div class="navbar navbar-fixed-top navbar-inverse">
       <div class="navbar-inner">
         <a class="brand" href="#">5c3</a>
-        <ul class="nav">
-          <li><a href="#">Home</a></li>
-        </ul>
+        <div class="btn-group">
+          <button class="btn dropdown-toggle" data-toggle="dropdown">
+            29c3
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu">
+            <li>27c3</li>
+            <li>28c3</li>
+            <li>29c3</li>
+          </ul>
+        </div>
         <form class="navbar-search pull-right">
           <input type="text" class="search-query" placeholder="Search">
         </form>
       </div>
     </div>
+    <div class="container-fluid">
       <div class="row-fluid">
         <div class="span12">
           <div id="isotopeContainer"></div>
