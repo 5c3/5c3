@@ -35,69 +35,75 @@ class FiveC3
     constructor: () ->
         @events = []
         @typeaheadStrings
-        @lastFullScreenItem
-        @player
-        @activeEvent
+        @columns = 5
+        @displayData = {} # Filtered and display ready data
+
         @templates = {} # Contains the template functions
         templateFiles = ['item', 'items','popunder'] # Provide a list of files to fetch. Leave .html away
         @getTemplates(templateFiles)
-        @minItemWidth = 310
-        # 240 x 135
-        @itemHeight = 135
-        $(window).resize( $.debounce(100,@resizeWindow ))
-        @updateItemWidth()
+
         @refreshEventData()
 
     filterEvents: (filterattributes) =>
         console.log('Filtering')
         @filterattributes = filterattributes
         console.log(@filterattributes)
-        @filteredEvents = @events.slice(0)
-        @filteredEvents = @filteredEvents.filter( (event) =>
+        filteredData = @events.slice(0)
+        filteredData = filteredData.filter( (event) =>
             for k, v of @filterattributes
                 if event[k] == v
                     return true
             return false
         )
 
-        i = 1
-        for item in @filteredEvents
+        # Prepare the datastructure for display
+        i = 0 # Item Number
+        j = 0 # Row Number
+        @displayData.rows = []
+        @displayData.rows[0] = []
+        for item in filteredData
             item.number = i
+            item.row = j
+            @displayData.rows[j].push(item)
             i = i + 1
+            if item.number % @columns == @columns - 1 # New Row
+                j = j + 1
+                @displayData.rows[j] = []
+
+        console.log(@displayData)
             # ...
         
 
-    moduleFilter: (object,index,array) =>
-        for filtervalue in @filters.module.values
-            if(object[5].value == filtervalue)
-                return true
-        return false
+    # moduleFilter: (object,index,array) =>
+    #     for filtervalue in @filters.module.values
+    #         if(object[5].value == filtervalue)
+    #             return true
+    #     return false
 
-    updateItemWidth:() =>
-        divWidth = $("#isotopeContainer").width()
-        @columns = Math.floor(divWidth / (@minItemWidth))
+    # updateItemWidth:() =>
+    #     divWidth = $("#isotopeContainer").width()
+    #     @columns = Math.floor(divWidth / (@minItemWidth))
 
-        @itemWidth = Math.floor(divWidth / @columns)
-        @itemHeight = Math.floor(@itemWidth * 135 / 240)
+    #     @itemWidth = Math.floor(divWidth / @columns)
+    #     @itemHeight = Math.floor(@itemWidth * 135 / 240)
 
-        console.log(@itemHeight + 'px')
-        console.log('Columns:' + @columns)
+    #     console.log(@itemHeight + 'px')
+    #     console.log('Columns:' + @columns)
 
-    resizeWindow: () =>
-        console.log('Resized')
-        timeResize = new Date().getTime()
+    # resizeWindow: () =>
+    #     console.log('Resized')
+    #     timeResize = new Date().getTime()
 
-        @updateItemWidth()
-        $('.item').width(@itemWidth).height(@itemHeight)      
-        # @writeEvents()
+    #     @updateItemWidth()
+    #     $('.item').width(@itemWidth).height(@itemHeight)      
+    #     # @writeEvents()
 
-        timeEndResize = new Date().getTime()
-        timeDeltaResize = timeEndResize - timeResize
-        console.log('Resize took ' + timeDeltaResize + ' ms')
+    #     timeEndResize = new Date().getTime()
+    #     timeDeltaResize = timeEndResize - timeResize
+    #     console.log('Resize took ' + timeDeltaResize + ' ms')
 
 
     getTemplates: (templateFiles) =>
-
         for templateFileName in templateFiles
             $.ajax(
                 url: '/tpl/' + templateFileName + '.html'
@@ -106,24 +112,17 @@ class FiveC3
             )
 
     writeEvents: (cb) =>
-        @filteredEvents.itemWidth = @itemWidth
-        @filteredEvents.itemHeight = @itemHeight
-        items = @templates.items(@filteredEvents)
-        top.replaceHtml("isotopeContainer",items) # Way faster
-        @writtenEvents()
+        items = @templates.items(@displayData)
+        top.replaceHtml("content",items)
+        # @writtenEvents()
         
 
     writtenEvents: (items) =>
-        console.log('Written')
         $('.item').each( ->
             item = $(this)
-            item.click(top.fiveC3.onItemClick)
+            # item.click(top.fiveC3.onItemClick)
         )
-
-            # ...
-        
-        
-                        
+     
 
     refreshEventData: () ->
         $.ajax( 
@@ -136,46 +135,45 @@ class FiveC3
             async: true
         )
 
-    getEventById: (id) =>
-        for evnt in @events
-            if evnt._id == id
-                return evnt
+    # getEventById: (id) =>
+    #     for evnt in @events
+    #         if evnt._id == id
+    #             return evnt
         
 
-    onItemClick: (e) =>
-        console.log('Click')
-        item = $(e.currentTarget)
-        item.id = item.attr('id')
-        console.log(item.id)
-        currentEvent = @getEventById(item.attr('data-id'))
-        if @lastActiveItemId != item.id
-            if @popunderContainer
-                @popunderContainer.animate(
-                    {height:'0px'},
-                    400,
-                    -> $(this).remove()
-                )
+    # onItemClick: (e) =>
+    #     item = $(e.currentTarget)
+    #     item.id = item.attr('id')
 
-            itemNumber = item.attr('data-number')
-            nextIndex = (@columns - itemNumber % @columns) - 1
-            console.log(nextIndex)
-            if @columns - 1 == nextIndex
-                lastItemInRow = item
-            else
-                lastItemInRow = item.nextAll(':eq(' + nextIndex + ')')
-            if @lastPopunder
-                @lastPopunder.animate({height:'0px'})
-                setTimeout(2000, =>
-                    @lastPopunder.remove())
-            
-            # Insert spacer after last div in this row
-            @popunderContainer = $(@templates.popunder(currentEvent))
-            
-            @popunderContainer.insertAfter(lastItemInRow)
-            @popunderContainer.animate({height:'380px'})
-            @initPlayer(currentEvent)
+    #     currentEvent = @getEventById(item.attr('data-id'))
+    #     if @lastActiveItemId != item.id
+    #         if @popunderContainer
+    #             @popunderContainer.animate(
+    #                 {height:'0px'},
+    #                 400,
+    #                 -> $(this).remove()
+    #             )
 
-        @lastActiveItemId = item.id
+    #         itemNumber = item.attr('data-number')
+    #         nextIndex = (@columns - itemNumber % @columns) - 1
+    #         console.log(nextIndex)
+    #         if @columns - 1 == nextIndex
+    #             lastItemInRow = item
+    #         else
+    #             lastItemInRow = item.nextAll(':eq(' + nextIndex + ')')
+    #         if @lastPopunder
+    #             @lastPopunder.animate({height:'0px'})
+    #             setTimeout(2000, =>
+    #                 @lastPopunder.remove())
+            
+    #         # Insert spacer after last div in this row
+    #         @popunderContainer = $(@templates.popunder(currentEvent))
+            
+    #         @popunderContainer.insertAfter(lastItemInRow)
+    #         @popunderContainer.animate({height:'380px'})
+    #         @initPlayer(currentEvent)
+
+    #     @lastActiveItemId = item.id
         
 
         

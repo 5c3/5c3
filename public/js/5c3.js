@@ -29,48 +29,33 @@
 
       this.onItemMouseMove = __bind(this.onItemMouseMove, this);
 
-      this.onItemClick = __bind(this.onItemClick, this);
-
-      this.getEventById = __bind(this.getEventById, this);
-
       this.writtenEvents = __bind(this.writtenEvents, this);
 
       this.writeEvents = __bind(this.writeEvents, this);
 
       this.getTemplates = __bind(this.getTemplates, this);
 
-      this.resizeWindow = __bind(this.resizeWindow, this);
-
-      this.updateItemWidth = __bind(this.updateItemWidth, this);
-
-      this.moduleFilter = __bind(this.moduleFilter, this);
-
       this.filterEvents = __bind(this.filterEvents, this);
 
       var templateFiles;
       this.events = [];
       this.typeaheadStrings;
-      this.lastFullScreenItem;
-      this.player;
-      this.activeEvent;
+      this.columns = 5;
+      this.displayData = {};
       this.templates = {};
       templateFiles = ['item', 'items', 'popunder'];
       this.getTemplates(templateFiles);
-      this.minItemWidth = 310;
-      this.itemHeight = 135;
-      $(window).resize($.debounce(100, this.resizeWindow));
-      this.updateItemWidth();
       this.refreshEventData();
     }
 
     FiveC3.prototype.filterEvents = function(filterattributes) {
-      var i, item, _i, _len, _ref, _results,
+      var filteredData, i, item, j, _i, _len,
         _this = this;
       console.log('Filtering');
       this.filterattributes = filterattributes;
       console.log(this.filterattributes);
-      this.filteredEvents = this.events.slice(0);
-      this.filteredEvents = this.filteredEvents.filter(function(event) {
+      filteredData = this.events.slice(0);
+      filteredData = filteredData.filter(function(event) {
         var k, v, _ref;
         _ref = _this.filterattributes;
         for (k in _ref) {
@@ -81,48 +66,22 @@
         }
         return false;
       });
-      i = 1;
-      _ref = this.filteredEvents;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        item = _ref[_i];
+      i = 0;
+      j = 0;
+      this.displayData.rows = [];
+      this.displayData.rows[0] = [];
+      for (_i = 0, _len = filteredData.length; _i < _len; _i++) {
+        item = filteredData[_i];
         item.number = i;
-        _results.push(i = i + 1);
-      }
-      return _results;
-    };
-
-    FiveC3.prototype.moduleFilter = function(object, index, array) {
-      var filtervalue, _i, _len, _ref;
-      _ref = this.filters.module.values;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        filtervalue = _ref[_i];
-        if (object[5].value === filtervalue) {
-          return true;
+        item.row = j;
+        this.displayData.rows[j].push(item);
+        i = i + 1;
+        if (item.number % this.columns === this.columns - 1) {
+          j = j + 1;
+          this.displayData.rows[j] = [];
         }
       }
-      return false;
-    };
-
-    FiveC3.prototype.updateItemWidth = function() {
-      var divWidth;
-      divWidth = $("#isotopeContainer").width();
-      this.columns = Math.floor(divWidth / this.minItemWidth);
-      this.itemWidth = Math.floor(divWidth / this.columns);
-      this.itemHeight = Math.floor(this.itemWidth * 135 / 240);
-      console.log(this.itemHeight + 'px');
-      return console.log('Columns:' + this.columns);
-    };
-
-    FiveC3.prototype.resizeWindow = function() {
-      var timeDeltaResize, timeEndResize, timeResize;
-      console.log('Resized');
-      timeResize = new Date().getTime();
-      this.updateItemWidth();
-      $('.item').width(this.itemWidth).height(this.itemHeight);
-      timeEndResize = new Date().getTime();
-      timeDeltaResize = timeEndResize - timeResize;
-      return console.log('Resize took ' + timeDeltaResize + ' ms');
+      return console.log(this.displayData);
     };
 
     FiveC3.prototype.getTemplates = function(templateFiles) {
@@ -144,19 +103,14 @@
 
     FiveC3.prototype.writeEvents = function(cb) {
       var items;
-      this.filteredEvents.itemWidth = this.itemWidth;
-      this.filteredEvents.itemHeight = this.itemHeight;
-      items = this.templates.items(this.filteredEvents);
-      top.replaceHtml("isotopeContainer", items);
-      return this.writtenEvents();
+      items = this.templates.items(this.displayData);
+      return top.replaceHtml("content", items);
     };
 
     FiveC3.prototype.writtenEvents = function(items) {
-      console.log('Written');
       return $('.item').each(function() {
         var item;
-        item = $(this);
-        return item.click(top.fiveC3.onItemClick);
+        return item = $(this);
       });
     };
 
@@ -174,59 +128,6 @@
         },
         async: true
       });
-    };
-
-    FiveC3.prototype.getEventById = function(id) {
-      var evnt, _i, _len, _ref;
-      _ref = this.events;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        evnt = _ref[_i];
-        if (evnt._id === id) {
-          return evnt;
-        }
-      }
-    };
-
-    FiveC3.prototype.onItemClick = function(e) {
-      var currentEvent, item, itemNumber, lastItemInRow, nextIndex,
-        _this = this;
-      console.log('Click');
-      item = $(e.currentTarget);
-      item.id = item.attr('id');
-      console.log(item.id);
-      currentEvent = this.getEventById(item.attr('data-id'));
-      if (this.lastActiveItemId !== item.id) {
-        if (this.popunderContainer) {
-          this.popunderContainer.animate({
-            height: '0px'
-          }, 400, function() {
-            return $(this).remove();
-          });
-        }
-        itemNumber = item.attr('data-number');
-        nextIndex = (this.columns - itemNumber % this.columns) - 1;
-        console.log(nextIndex);
-        if (this.columns - 1 === nextIndex) {
-          lastItemInRow = item;
-        } else {
-          lastItemInRow = item.nextAll(':eq(' + nextIndex + ')');
-        }
-        if (this.lastPopunder) {
-          this.lastPopunder.animate({
-            height: '0px'
-          });
-          setTimeout(2000, function() {
-            return _this.lastPopunder.remove();
-          });
-        }
-        this.popunderContainer = $(this.templates.popunder(currentEvent));
-        this.popunderContainer.insertAfter(lastItemInRow);
-        this.popunderContainer.animate({
-          height: '380px'
-        });
-        this.initPlayer(currentEvent);
-      }
-      return this.lastActiveItemId = item.id;
     };
 
     FiveC3.prototype.onItemMouseMove = function(e) {};

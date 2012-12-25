@@ -1,93 +1,51 @@
 body{
-
-	padding-top: 40px;
+	padding-top: 55px;
 }
 
-/*#isotopeContainer{
-	height: 500px;
-}*/
 img{
 	border: 0px;
 }
-.popunderspacer{
-	float: none;
-	clear: both;
-	height: 0px;
-	padding: 20px;
-	margin-left: -40px;
-	margin-right: -40px;
+
+.popunder{
+	max-height: 0px;
+	overflow: hidden;
+	-webkit-transition: all 1s ease-in-out;
+	-moz-transition: all 1s ease-in-out;
+	-o-transition: all 1s ease-in-out;
+	transition: all 1s ease-in-out;
+	/*display: none;*/
 }
 
-.popunderinnerspacer {
-	height: 100%;
-	background: #727272; /* Old browsers */
-
-	padding: 10px 40px;
-	
-	/*background: -moz-linear-gradient(top, #727272 0%, #131313 100%); /* FF3.6+ */
-	/*background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#727272), color-stop(100%,#131313)); /* Chrome,Safari4+ */
-	/*background: -webkit-linear-gradient(top, #727272 0%,#131313 100%); /* Chrome10+,Safari5.1+ */
-	/*background: -o-linear-gradient(top, #727272 0%,#131313 100%); /* Opera 11.10+ */
-	/*background: -ms-linear-gradient(top, #727272 0%,#131313 100%); /* IE10+ */
-	/*background: linear-gradient(to bottom, #727272 0%,#131313 100%); /* W3C */
-	
+.popundercontent{
+	padding-left: 20px;
+	margin-bottom: 1.3%;
 	background: url("../img/whitey.png");
-	
 	border-top: 1px #aaa solid;
 	border-bottom: 1px #aaa solid;
-	
 	box-shadow: inset 0px 1px 7px rgba(0,0,0,0.5);
-
 }
 
-.popunderinnerspacer h1 {
+.popunder h1 {
 	margin-bottom: 0;
 }
 
-.popunderinnerspacer h2 {
+.popunder h2 {
 	margin-top: 0;
 	font-weight: 200;
 }
 
-
-
 .item{
-	display: block;
-	width: 220px;
-	height: 135px;
 	margin: 0px;
-	padding: 0;
+	margin-bottom: 1.3%;
 	position: relative;
-	float: left;
-	
 }
 
-.inneritem{
-	position: relative;
-	display: block;
-
-	margin: 20px;
-	height: 100%;
-
-
-}
-
-.inneritem .thumb {
-	width: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-}
-
-.inneritem .info {
+.item .info {
 	position: absolute;
 	left: 0;
-	bottom: 20px;
+	bottom: 0;
 	color: #DDDDDD;
 	width: 100%;
-	padding: 5px 0px;
-	/*margin-left: 5px;*/
-	/*margin-right: 5px;*/
 	background: rgba(0, 0, 0, 0.7); 
 }
 
@@ -95,7 +53,6 @@ img{
 	margin: 0;
 	padding: 5px 10px;
 	color: white;
-	font-size: 1em;
 	line-height: 1.2em;
 	overflow: hidden;
 	font-weight: 200;
@@ -107,7 +64,7 @@ img{
 }
 
 .item h1 {
-	font-size: 1.2em;
+	font-size: 0.9em;
 }
 .item h2 {
 	font-size: 0.8em;
@@ -119,66 +76,10 @@ img{
 	height: 100%;
 }
 
-.item .thumbnail {
-	position: absolute;
+.item .thumb {
 	padding: 0;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-}
-
-
-
-
-
-
-/**** Isotope Filtering ****/
-
-.isotope-item {
-  z-index: 2;
-}
-
-.isotope-hidden.isotope-item {
-  pointer-events: none;
-  z-index: 1;
-}
-
-/**** Isotope CSS3 transitions ****/
-
-.isotope,
-.isotope .isotope-item {
-  -webkit-transition-duration: 0.8s;
-     -moz-transition-duration: 0.8s;
-      -ms-transition-duration: 0.8s;
-       -o-transition-duration: 0.8s;
-          transition-duration: 0.8s;
-}
-
-.isotope {
-  -webkit-transition-property: height, width;
-     -moz-transition-property: height, width;
-      -ms-transition-property: height, width;
-       -o-transition-property: height, width;
-          transition-property: height, width;
-}
-
-.isotope .isotope-item {
-  -webkit-transition-property: -webkit-transform, opacity;
-     -moz-transition-property:    -moz-transform, opacity;
-      -ms-transition-property:     -ms-transform, opacity;
-       -o-transition-property:      -o-transform, opacity;
-          transition-property:         transform, opacity;
-}
-
-/**** disabling Isotope CSS3 transitions ****/
-
-.isotope.no-transition,
-.isotope.no-transition .isotope-item,
-.isotope .isotope-item.no-transition {
-  -webkit-transition-duration: 0s;
-     -moz-transition-duration: 0s;
-      -ms-transition-duration: 0s;
-       -o-transition-duration: 0s;
-          transition-duration: 0s;
 }

@@ -1,16 +1,33 @@
- {{~it:item}}
-	 <div class="item" data-number="{{=item.number}}" data-id="{{=item._id}}" id="evnt_{{=item._id}}" style="width:{{=it.itemWidth}}px; height:{{=it.itemHeight}}px;">
-	 	<div class="inneritem">
-		    <img class="thumb" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/1.jpg" alt="" />
-		    <img class="thumb" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/2.jpg" alt="" />
-		    <img class="thumb" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/3.jpg" alt="" />
-		    <img class="thumb" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/4.jpg" alt="" />
-		    <img class="thumb" src="http://195.54.164.141:81/thumbs/{{=item._id || ''}}/5.jpg" alt="" />
-
-		    <div class="info">
+{{~it.rows:row}}
+	<div class="row-fluid">
+		{{~row:item}}
+			<div class="span2 item" data-row="{{=item.row}}">
+				<img class="thumb" src="http://daten.der-begier.de/thumbs/{{=item._id || ''}}/1.jpg" alt="{{=item.title}}" />
+				<div class="info">
 		        <h1>{{=item.title || ''}}</h1>
-		        
-		    </div>	 		
-	 	</div>
+		    </div>	
+			</div>
+		{{~}}
+	</div>
+	<div class="row-fluid popunder popunder-hidden">
+		<div class="popundercontent span10" >
+			<div class="span5">
+				<h1>Title</h1>
+				<h2>Subtitle</h2>
+				<dl>
+				  <dt>Speaker</dt>
+				  <dd>
+				  	Speaker
+				  </dd>
+				  <dt>Track</dt>
+				  <dd>Hacking</dd>
+				  <dt>Description</dt>
+				  <dd>Beschreibungstext</dd>
+				</dl>
+			</div>
+			<div class="player span5">
+				<video src="" type="video/mp4" preload="none" poster=""></video>
+			</div>
+		</div>
 	</div>
 {{~}}
