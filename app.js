@@ -52,9 +52,9 @@ app.get('/events', function(req, res) {
             if (docs[i].timestamp>new Date().getTime()/1000) docs[i].status = "upcoming";
             else if (endtime>new Date().getTime()/1000) {
                 docs[i].status = "live";
-                if (docs[i].location == "Saal 1") docs[i].video = "http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8";
-                else if (docs[i].location == "Saal 2") docs[i].video = "http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8";
-                else if (docs[i].location == "Saal 3") docs[i].video = "http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8";
+                if (docs[i].location == "Saal 1") docs[i].video = "http://cdn.29c3.fem-net.de/hls/saal1/saal1_multi.m3u8";
+                else if (docs[i].location == "Saal 4") docs[i].video = "http://cdn.29c3.fem-net.de/hls/saal4/saal4_hq.m3u8";
+                else if (docs[i].location == "Saal 6") docs[i].video = "http://cdn.29c3.fem-net.de/hls/saal6/saal6_hq.m3u8";
             } else {
                 docs[i].status = "past";
                 docs[i].video = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
