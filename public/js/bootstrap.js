@@ -1759,7 +1759,8 @@
       var that = this
 
       items = $(items).map(function (i, item) {
-        i = $(that.options.item).attr('data-value', item)
+        i = $(that.options.item).attr('data-value', item.selectedValue)
+        i.attr('data-type', item.datatype)
         i.find('a').html(that.highlighter(item))
         return i[0]
       })

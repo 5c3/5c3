@@ -88,20 +88,29 @@ class FiveC3
             return 0
         )
         lasttype = ''
-        newItems.push({datatype:'seperator', value: '<div class="typeahead_seperator">Events</div>'})
+        # newItems.push({datatype:'seperator', value: '<div class="typeahead_seperator">Events</div>'})
         for item in items
-            if item.datatype == 'speaker' and lasttype == 'event'
-                # Insert placeholder between events and speakers
-                newItems.push(newItems.push({datatype:'seperator', value: '<div class="typeahead_seperator">Speakers</div>'}))
+            if item.datatype == 'speaker'
+                # if lasttype == 'event'
+                    # Insert placeholder between events and speakers
+                    # newItems.push(newItems.push({datatype:'seperator', value: '<div class="typeahead_seperator">Speakers</div>'}))
+                item.selectedValue = item.name
+                # console.log(item.name)
+            else
+                item.selectedValue = item.title
+                console.log(item.title)
             newItems.push(item)
 
-            lasttype = item.datatype
+            # lasttype = item.datatype
 
         return newItems
 
 
 
     typeaheadUpdater: (item) ->
+        console.log('Selected')
+        console.log(item)
+        console.log(this.query)
         return item
 
     typeaheadHighlighter: (item) ->
@@ -180,7 +189,7 @@ class FiveC3
             source: @typeaheadSource
             matcher: @typeaheadMatcher
             sorter: @typeaheadSorter
-            # updater: @typeaheadUpdateort
+            updater: @typeaheadUpdater
             highlighter: @typeaheadHighlighter
         }
         @typeahead = $('.search-query').typeahead(typeaheadOptions)
