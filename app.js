@@ -2,7 +2,7 @@
 var password = "asd";
 var express = require('express');
 var appPort = 8003;
-var collections = ["events"]
+var collections = ["events","speakers"]
 var db = require("mongojs").connect("5c3", collections);
 var app = express();
 var http = require('http');
@@ -18,7 +18,6 @@ var adminAuth = express.basicAuth(function(user,pwd) {
 
 //register view
 app.post(/event\/(.+)/, function(req, res) {
-    console.log(req);
     if (req.params[0]) {
         db.events.update({_id: req.params[0]}, { $inc: { popularity: 1 } }, function(err, saved) {
             if (err) res.send(500);
@@ -62,6 +61,14 @@ app.get('/events', function(req, res) {
             }            
         }
         
+        res.json(docs);
+    });
+});
+
+
+app.get('/speakers', function(req, res) {
+    db.speakers.find(function(err, docs) {
+        if (err) res.send(500);
         res.json(docs);
     });
 });
@@ -129,13 +136,17 @@ app.post('/events',adminAuth, function(req, res) {
                                 try {
                                     for (p=0;p<eventJson.schedule.day[i].room[j].event[e].persons[0].person.length;p++) {
                                         obj.persons.push(eventJson.schedule.day[i].room[j].event[e].persons[0].person[p]["_"]);
+                                        currentSpeaker = {"name":eventJson.schedule.day[i].room[j].event[e].persons[0].person[p]["_"],"_id":eventJson.schedule.day[i].room[j].event[e].persons[0].person[p]["$"].id};
+                                        console.log("speaker"+eventJson.schedule.day[i].room[j].event[e].persons[0].person[p]["$"].id);
+                                        db.speakers.update({"_id":eventJson.schedule.day[i].room[j].event[e].persons[0].person[p]["$"].id},currentSpeaker, {upsert:true}, function (err,saved) {});
+                                        
                                     }
                                 } catch (e) {}
                                 
                                 obj.links = [];
                                 try {
                                     for (l=0;l<eventJson.schedule.day[i].room[j].event[e].links[0].link.length;l++) {
-                                        obj.links.push(eventJson.schedule.day[i].room[j].event[e].links[0].link[l].$.href);
+                                        obj.links.push(eventJson.schedule.day[i].room[j].event[e].links[0].link[l].$.href);                                        
                                     }
                                 } catch (e) {}
                                 
