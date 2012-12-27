@@ -34,6 +34,23 @@ img{
 	font-weight: 200;
 }
 
+.typeahead_event{
+	line-height: 0.7em;
+
+}
+.typeahead_event h1{
+	font-size: 0.7em;
+}
+.typeahead_event h2{
+	font-size: 0.6em;
+}
+.typeahead_event img{
+	display: inline;
+	float:left;
+	width: 64px;
+	height: 64px;
+}
+
 .item{
 	margin: 0px;
 	margin-bottom: 1.3%;

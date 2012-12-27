@@ -74,7 +74,6 @@ app.get('/speakers', function(req, res) {
 });
 
 
-
 app.post('/events',adminAuth, function(req, res) {
     
     xml2js = require('xml2js');
@@ -102,7 +101,7 @@ app.post('/events',adminAuth, function(req, res) {
             parser.parseString(pageData, function (err, eventJson) {
                 
                 events = [];
-                
+                                
                 for (i=0;i<eventJson.schedule.day.length;i++) {
                     for (j=0;j<eventJson.schedule.day[i].room.length;j++) {
                         if (eventJson.schedule.day[i].room[j].event) {

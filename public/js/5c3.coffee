@@ -40,21 +40,92 @@ class FiveC3
         @displayData = {} # Filtered and display ready data
 
         @templates = {} # Contains the template functions
-        templateFiles = ['item', 'items','popunder'] # Provide a list of files to fetch. Leave .html away
+        templateFiles = ['item', 'items','popunder','typeahead'] # Provide a list of files to fetch. Leave .html away
         @getTemplates(templateFiles)
-
         @refreshEventData()
+
+    typeaheadSource: (query, callback) =>
+        typeaheadSources = []
+        for evnt in @events
+            evnt.datatype = 'event'
+            typeaheadSources.push(evnt)
+        for speaker in @speakers
+            speaker.datatype = 'speaker'
+            typeaheadSources.push(speaker)
+
+        return typeaheadSources
+
+    typeaheadMatcher: (item) ->
+        re = new RegExp(this.query,'i')
+        if item.datatype == 'event'
+            if item.title.match(re)
+                return true
+            if typeof(item.subtitle) == 'string' and item.subtitle.match(re)
+                return true
+        if item.datatype == 'speaker'
+            if item.name.match(re)
+                return true
+
+    typeaheadSorter: (items) ->
+
+        newItems = []
+
+        items.sort( (a,b) -> 
+            if(a.datatype == 'event' and b.datatype == 'speaker')
+                return -1
+            if(a.datatype == 'speaker' and b.datatype == 'event')
+                return 1
+            if(a.datatype == b.datatype and a.datatype == 'event')
+                if a.title.toLowerCase() > b.title.toLowerCase()
+                    return 1
+                if a.title.toLowerCase() < b.title.toLowerCase()
+                    return -1
+            if(a.datatype == b.datatype and a.datatype == 'speaker')
+                if a.name.toLowerCase() > b.name.toLowerCase()
+                    return 1
+                if a.name.toLowerCase() < b.name.toLowerCase()
+                    return -1
+            return 0
+        )
+        for item in items
+            if typeof(item.title) == 'string'
+                newItems.push(top.fiveC3.templates.typeahead(item))
+            if typeof(item.name) == 'string'
+                newItems.push(top.fiveC3.templates.typeahead(item))
+
+        return newItems
+
+
+
+    typeaheadUpdater: (item) ->
+        return item
+
+    typeaheadHighlighter: (item) ->
+        return item
+        # if typeof(item.title) == 'string'
+        #     return item.title
+        # if typeof(item.name) == 'string'
+        #     return item.name
 
     filterEvents: (filterattributes) =>
         console.log('Filtering')
         @filterattributes = filterattributes
-        console.log(@events)
         filteredData = @events.slice(0)
-        filteredData = filteredData.filter( (event) =>
-            for k, v of @filterattributes
-                if event[k] == v
-                    return true
-            return false
+        if @filterattributes
+            filteredData = filteredData.filter( (event) =>
+                for k, v of @filterattributes
+                    if event[k] == v
+                        return true
+                return false
+            )
+
+        # Sort the data by timestamp (ASCENDING)
+        filteredData.sort( (a,b) -> 
+            if(a.timestamp < b.timestamp)
+                return -1
+            if(a.timestamp > b.timestamp)
+                return 1
+            return 0
         )
 
         # Prepare the datastructure for display
@@ -72,16 +143,6 @@ class FiveC3
                 j = j + 1
                 @displayData.rows[j] = []
                 @displayData.rows[j].rownumber = j
-
-        console.log(@displayData)
-            # ...
-        
-
-    # moduleFilter: (object,index,array) =>
-    #     for filtervalue in @filters.module.values
-    #         if(object[5].value == filtervalue)
-    #             return true
-    #     return false
 
 
     getTemplates: (templateFiles) =>
@@ -103,6 +164,14 @@ class FiveC3
             item = $(this)
             item.click(top.fiveC3.onItemClick)
         )
+        typeaheadOptions = {
+            source: @typeaheadSource
+            matcher: @typeaheadMatcher
+            sorter: @typeaheadSorter
+            # updater: @typeaheadUpdateort
+            # highlighter: @typeaheadHighlighter
+        }
+        @typeahead = $('.search-query').typeahead(typeaheadOptions)
      
 
     refreshEventData: () ->
@@ -111,8 +180,15 @@ class FiveC3
             datatype: 'json'
             success: (dataFromServer) =>
                 @events = dataFromServer
-                @filterEvents({conference:'29th Chaos Communication Congress'})
+                @filterEvents()
                 @writeEvents()
+            async: true
+        )
+        $.ajax( 
+            url:'/speakers'
+            datatype: 'json'
+            success: (dataFromServer) =>
+                @speakers = dataFromServer
             async: true
         )
 
