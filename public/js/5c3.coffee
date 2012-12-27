@@ -139,7 +139,7 @@ class FiveC3
                 lastRow.css('max-height','0px')
                 row.css('max-height','300px')
 
-            top.replaceHtml('popundercontent',@templates.popunder(eventObject))
+            top.replaceHtml('rowcontent_'+ item.row,@templates.popunder(eventObject))
             @initPlayer(eventObject) 
             @lastactiveitem = item      
 

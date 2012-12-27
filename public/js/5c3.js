@@ -168,7 +168,7 @@
           lastRow.css('max-height', '0px');
           row.css('max-height', '300px');
         }
-        top.replaceHtml('popundercontent', this.templates.popunder(eventObject));
+        top.replaceHtml('rowcontent_' + item.row, this.templates.popunder(eventObject));
         this.initPlayer(eventObject);
         return this.lastactiveitem = item;
       }
