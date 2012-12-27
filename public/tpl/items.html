@@ -1,15 +1,22 @@
 {{~it.rows:row}}
 	<div class="row-fluid">
 		{{~row:item}}
-			<div class="span2 item" data-row="{{=item.row}}" id='evnt{{=item._id}}' data-event-id='{{=item._id}}'>
+			<div class="span2 item {{? item.status == 'live'}} live {{?}}" data-row="{{=item.row}}" id='evnt{{=item._id}}' data-event-id='{{=item._id}}'>
 				{{? item.status == "past"}}
 					<img class="thumb hidden-phone" src="http://daten.der-begier.de/thumbs/{{=item._id || ''}}/1.jpg" alt="{{=item.title}}" />
 				{{??}}
 					<img class="thumb hidden-phone" src="img/no_thumb.png" alt="{{=item.title}}" />
 				{{?}}
+				
+				{{? item.status == "live"}}
+					<div class="live-indicator">⬤</div>
+				{{?}}
 				<div class="info">
 		        <h1>{{=item.title || ''}}</h1>
-		        <h2>{{=item.subtitle || ''}}</h2>
+		        <h2>{{=item.subtitle || ''}}<br />
+			        <span class="muted">{{=item.room || ''}} – {{=item.persons || ''}}</span>
+		        </h2>
+
 		    </div>	
 			</div>
 		{{~}}
