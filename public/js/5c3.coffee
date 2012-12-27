@@ -64,7 +64,6 @@ class FiveC3
         @displayData.rows[0] = []
         @displayData.rows[0].rownumber = 0
         for item in filteredData
-            console.log(item)
             item.number = i
             item.row = j
             @displayData.rows[j].push(item)
@@ -83,28 +82,6 @@ class FiveC3
     #         if(object[5].value == filtervalue)
     #             return true
     #     return false
-
-    # updateItemWidth:() =>
-    #     divWidth = $("#isotopeContainer").width()
-    #     @columns = Math.floor(divWidth / (@minItemWidth))
-
-    #     @itemWidth = Math.floor(divWidth / @columns)
-    #     @itemHeight = Math.floor(@itemWidth * 135 / 240)
-
-    #     console.log(@itemHeight + 'px')
-    #     console.log('Columns:' + @columns)
-
-    # resizeWindow: () =>
-    #     console.log('Resized')
-    #     timeResize = new Date().getTime()
-
-    #     @updateItemWidth()
-    #     $('.item').width(@itemWidth).height(@itemHeight)      
-    #     # @writeEvents()
-
-    #     timeEndResize = new Date().getTime()
-    #     timeDeltaResize = timeEndResize - timeResize
-    #     console.log('Resize took ' + timeDeltaResize + ' ms')
 
 
     getTemplates: (templateFiles) =>
@@ -134,15 +111,15 @@ class FiveC3
             datatype: 'json'
             success: (dataFromServer) =>
                 @events = dataFromServer
-                @filterEvents({conference:'28th Chaos Communication Congress'})
+                @filterEvents({conference:'29th Chaos Communication Congress'})
                 @writeEvents()
             async: true
         )
 
-    # getEventById: (id) =>
-    #     for evnt in @events
-    #         if evnt._id == id
-    #             return evnt
+    getEventById: (id) =>
+        for evnt in @events
+            if evnt._id == id
+                return evnt
         
 
     onItemClick: (e) =>
@@ -150,17 +127,20 @@ class FiveC3
         item = $(e.currentTarget)
         item.id = item.attr('id')
         item.row = item.attr('data-row')
+        item._id = item.attr('data-event-id')
         console.log(item.id)
         console.log(@lastactiveitem.id)
         if item.id != @lastactiveitem.id
             console.log('A item was clicked that"s not the previous one')
+            eventObject = @getEventById(item._id)
             if item.row != @lastactiveitem.row
                 row = $('#row' + item.row)
                 lastRow = $('#row' + @lastactiveitem.row)
                 lastRow.css('max-height','0px')
                 row.css('max-height','300px')
-                
-                #todo Clear DOM. Remove Video Tag and so on
+
+            top.replaceHtml('popundercontent',@templates.popunder(eventObject))
+            @initPlayer(eventObject) 
             @lastactiveitem = item
 
         # currentEvent = @getEventById(item.attr('data-id'))

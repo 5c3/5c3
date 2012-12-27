@@ -31,6 +31,8 @@
 
       this.onItemClick = __bind(this.onItemClick, this);
 
+      this.getEventById = __bind(this.getEventById, this);
+
       this.writtenEvents = __bind(this.writtenEvents, this);
 
       this.writeEvents = __bind(this.writeEvents, this);
@@ -76,7 +78,6 @@
       this.displayData.rows[0].rownumber = 0;
       for (_i = 0, _len = filteredData.length; _i < _len; _i++) {
         item = filteredData[_i];
-        console.log(item);
         item.number = i;
         item.row = j;
         this.displayData.rows[j].push(item);
@@ -130,7 +131,7 @@
         success: function(dataFromServer) {
           _this.events = dataFromServer;
           _this.filterEvents({
-            conference: '28th Chaos Communication Congress'
+            conference: '29th Chaos Communication Congress'
           });
           return _this.writeEvents();
         },
@@ -138,22 +139,37 @@
       });
     };
 
+    FiveC3.prototype.getEventById = function(id) {
+      var evnt, _i, _len, _ref;
+      _ref = this.events;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        evnt = _ref[_i];
+        if (evnt._id === id) {
+          return evnt;
+        }
+      }
+    };
+
     FiveC3.prototype.onItemClick = function(e) {
-      var item, lastRow, row;
+      var eventObject, item, lastRow, row;
       console.log('click');
       item = $(e.currentTarget);
       item.id = item.attr('id');
       item.row = item.attr('data-row');
+      item._id = item.attr('data-event-id');
       console.log(item.id);
       console.log(this.lastactiveitem.id);
       if (item.id !== this.lastactiveitem.id) {
         console.log('A item was clicked that"s not the previous one');
+        eventObject = this.getEventById(item._id);
         if (item.row !== this.lastactiveitem.row) {
           row = $('#row' + item.row);
           lastRow = $('#row' + this.lastactiveitem.row);
           lastRow.css('max-height', '0px');
           row.css('max-height', '300px');
         }
+        top.replaceHtml('popundercontent', this.templates.popunder(eventObject));
+        this.initPlayer(eventObject);
         return this.lastactiveitem = item;
       }
     };

@@ -1,8 +1,12 @@
 {{~it.rows:row}}
 	<div class="row-fluid">
 		{{~row:item}}
-			<div class="span2 item" data-row="{{=item.row}}" id='evnt{{=item._id}}'>
-				<img class="thumb hidden-phone" src="http://daten.der-begier.de/thumbs/{{=item._id || ''}}/1.jpg" alt="{{=item.title}}" />
+			<div class="span2 item" data-row="{{=item.row}}" id='evnt{{=item._id}}' data-event-id='{{=item._id}}'>
+				{{? item.status == "past"}}
+					<img class="thumb hidden-phone" src="http://daten.der-begier.de/thumbs/{{=item._id || ''}}/1.jpg" alt="{{=item.title}}" />
+				{{??}}
+					<img class="thumb hidden-phone" src="img/no_thumb.png" alt="{{=item.title}}" />
+				{{?}}
 				<div class="info">
 		        <h1>{{=item.title || ''}}</h1>
 		        <h2>{{=item.subtitle || ''}}</h2>
@@ -11,24 +15,7 @@
 		{{~}}
 	</div>
 	<div class="row-fluid popunder hidden-phone" id="row{{=row.rownumber}}">
-		<div class="popundercontent span10" >
-			<div class="span5">
-				<h1>Title</h1>
-				<h2>Subtitle</h2>
-				<dl>
-				  <dt>Speaker</dt>
-				  <dd>
-				  	Speaker
-				  </dd>
-				  <dt>Track</dt>
-				  <dd>Hacking</dd>
-				  <dt>Description</dt>
-				  <dd>Beschreibungstext</dd>
-				</dl>
-			</div>
-			<div class="player span5">
-				<video src="" type="video/mp4" preload="none" poster=""></video>
-			</div>
+		<div id="popundercontent" class="span10" >
 		</div>
 	</div>
 {{~}}
