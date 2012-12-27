@@ -58,7 +58,7 @@
         _this = this;
       console.log('Filtering');
       this.filterattributes = filterattributes;
-      console.log(this.filterattributes);
+      console.log(this.events);
       filteredData = this.events.slice(0);
       filteredData = filteredData.filter(function(event) {
         var k, v, _ref;

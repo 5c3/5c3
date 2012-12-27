@@ -48,7 +48,7 @@ class FiveC3
     filterEvents: (filterattributes) =>
         console.log('Filtering')
         @filterattributes = filterattributes
-        console.log(@filterattributes)
+        console.log(@events)
         filteredData = @events.slice(0)
         filteredData = filteredData.filter( (event) =>
             for k, v of @filterattributes
@@ -141,41 +141,7 @@ class FiveC3
 
             top.replaceHtml('popundercontent',@templates.popunder(eventObject))
             @initPlayer(eventObject) 
-            @lastactiveitem = item
-
-        # currentEvent = @getEventById(item.attr('data-id'))
-        # if @lastActiveItemId != item.id
-        #     if @popunderContainer
-        #         @popunderContainer.animate(
-        #             {height:'0px'},
-        #             400,
-        #             -> $(this).remove()
-        #         )
-
-        #     itemNumber = item.attr('data-number')
-        #     nextIndex = (@columns - itemNumber % @columns) - 1
-        #     console.log(nextIndex)
-        #     if @columns - 1 == nextIndex
-        #         lastItemInRow = item
-        #     else
-        #         lastItemInRow = item.nextAll(':eq(' + nextIndex + ')')
-        #     if @lastPopunder
-        #         @lastPopunder.animate({height:'0px'})
-        #         setTimeout(2000, =>
-        #             @lastPopunder.remove())
-            
-        #     # Insert spacer after last div in this row
-        #     @popunderContainer = $(@templates.popunder(currentEvent))
-            
-        #     @popunderContainer.insertAfter(lastItemInRow)
-        #     @popunderContainer.animate({height:'380px'})
-        #     @initPlayer(currentEvent)
-
-        # @lastActiveItemId = item.id
-        
-
-        
-        
+            @lastactiveitem = item      
 
     onItemMouseMove: (e) =>
         # 
