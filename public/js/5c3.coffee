@@ -87,13 +87,16 @@ class FiveC3
                     return -1
             return 0
         )
-        lasttype = ''
+        lasttype = 'first'
         # newItems.push({datatype:'seperator', value: '<div class="typeahead_seperator">Events</div>'})
         for item in items
+            if lasttype == 'first'
+                console.log('first')
+                item.extraclass = 'firstevent'
             if item.datatype == 'speaker'
-                # if lasttype == 'event'
-                    # Insert placeholder between events and speakers
-                    # newItems.push(newItems.push({datatype:'seperator', value: '<div class="typeahead_seperator">Speakers</div>'}))
+                if lasttype == 'event'
+                    # Mark first event for css
+                    item.extraclass = 'firstspeaker'
                 item.selectedValue = item.name
                 # console.log(item.name)
             else
@@ -101,7 +104,7 @@ class FiveC3
                 console.log(item.title)
             newItems.push(item)
 
-            # lasttype = item.datatype
+            lasttype = item.datatype
 
         return newItems
 

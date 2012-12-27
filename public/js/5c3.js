@@ -119,16 +119,24 @@
         }
         return 0;
       });
-      lasttype = '';
+      lasttype = 'first';
       for (_i = 0, _len = items.length; _i < _len; _i++) {
         item = items[_i];
+        if (lasttype === 'first') {
+          console.log('first');
+          item.extraclass = 'firstevent';
+        }
         if (item.datatype === 'speaker') {
+          if (lasttype === 'event') {
+            item.extraclass = 'firstspeaker';
+          }
           item.selectedValue = item.name;
         } else {
           item.selectedValue = item.title;
           console.log(item.title);
         }
         newItems.push(item);
+        lasttype = item.datatype;
       }
       return newItems;
     };
