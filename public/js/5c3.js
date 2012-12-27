@@ -29,6 +29,8 @@
 
       this.onItemMouseMove = __bind(this.onItemMouseMove, this);
 
+      this.onItemClick = __bind(this.onItemClick, this);
+
       this.writtenEvents = __bind(this.writtenEvents, this);
 
       this.writeEvents = __bind(this.writeEvents, this);
@@ -41,6 +43,7 @@
       this.events = [];
       this.typeaheadStrings;
       this.columns = 5;
+      this.lastactiveitem = {};
       this.displayData = {};
       this.templates = {};
       templateFiles = ['item', 'items', 'popunder'];
@@ -70,8 +73,10 @@
       j = 0;
       this.displayData.rows = [];
       this.displayData.rows[0] = [];
+      this.displayData.rows[0].rownumber = 0;
       for (_i = 0, _len = filteredData.length; _i < _len; _i++) {
         item = filteredData[_i];
+        console.log(item);
         item.number = i;
         item.row = j;
         this.displayData.rows[j].push(item);
@@ -79,6 +84,7 @@
         if (item.number % this.columns === this.columns - 1) {
           j = j + 1;
           this.displayData.rows[j] = [];
+          this.displayData.rows[j].rownumber = j;
         }
       }
       return console.log(this.displayData);
@@ -104,13 +110,15 @@
     FiveC3.prototype.writeEvents = function(cb) {
       var items;
       items = this.templates.items(this.displayData);
-      return top.replaceHtml("content", items);
+      top.replaceHtml("content", items);
+      return this.writtenEvents();
     };
 
     FiveC3.prototype.writtenEvents = function(items) {
       return $('.item').each(function() {
         var item;
-        return item = $(this);
+        item = $(this);
+        return item.click(top.fiveC3.onItemClick);
       });
     };
 
@@ -128,6 +136,26 @@
         },
         async: true
       });
+    };
+
+    FiveC3.prototype.onItemClick = function(e) {
+      var item, lastRow, row;
+      console.log('click');
+      item = $(e.currentTarget);
+      item.id = item.attr('id');
+      item.row = item.attr('data-row');
+      console.log(item.id);
+      console.log(this.lastactiveitem.id);
+      if (item.id !== this.lastactiveitem.id) {
+        console.log('A item was clicked that"s not the previous one');
+        if (item.row !== this.lastactiveitem.row) {
+          row = $('#row' + item.row);
+          lastRow = $('#row' + this.lastactiveitem.row);
+          lastRow.css('max-height', '0px');
+          row.css('max-height', '300px');
+        }
+        return this.lastactiveitem = item;
+      }
     };
 
     FiveC3.prototype.onItemMouseMove = function(e) {};

@@ -36,6 +36,7 @@ class FiveC3
         @events = []
         @typeaheadStrings
         @columns = 5
+        @lastactiveitem = {}
         @displayData = {} # Filtered and display ready data
 
         @templates = {} # Contains the template functions
@@ -61,7 +62,9 @@ class FiveC3
         j = 0 # Row Number
         @displayData.rows = []
         @displayData.rows[0] = []
+        @displayData.rows[0].rownumber = 0
         for item in filteredData
+            console.log(item)
             item.number = i
             item.row = j
             @displayData.rows[j].push(item)
@@ -69,6 +72,7 @@ class FiveC3
             if item.number % @columns == @columns - 1 # New Row
                 j = j + 1
                 @displayData.rows[j] = []
+                @displayData.rows[j].rownumber = j
 
         console.log(@displayData)
             # ...
@@ -114,13 +118,13 @@ class FiveC3
     writeEvents: (cb) =>
         items = @templates.items(@displayData)
         top.replaceHtml("content",items)
-        # @writtenEvents()
+        @writtenEvents()
         
 
     writtenEvents: (items) =>
         $('.item').each( ->
             item = $(this)
-            # item.click(top.fiveC3.onItemClick)
+            item.click(top.fiveC3.onItemClick)
         )
      
 
@@ -141,39 +145,53 @@ class FiveC3
     #             return evnt
         
 
-    # onItemClick: (e) =>
-    #     item = $(e.currentTarget)
-    #     item.id = item.attr('id')
+    onItemClick: (e) =>
+        console.log('click')
+        item = $(e.currentTarget)
+        item.id = item.attr('id')
+        item.row = item.attr('data-row')
+        console.log(item.id)
+        console.log(@lastactiveitem.id)
+        if item.id != @lastactiveitem.id
+            console.log('A item was clicked that"s not the previous one')
+            if item.row != @lastactiveitem.row
+                row = $('#row' + item.row)
+                lastRow = $('#row' + @lastactiveitem.row)
+                lastRow.css('max-height','0px')
+                row.css('max-height','300px')
+                
+                #todo Clear DOM. Remove Video Tag and so on
+            @lastactiveitem = item
 
-    #     currentEvent = @getEventById(item.attr('data-id'))
-    #     if @lastActiveItemId != item.id
-    #         if @popunderContainer
-    #             @popunderContainer.animate(
-    #                 {height:'0px'},
-    #                 400,
-    #                 -> $(this).remove()
-    #             )
+        # currentEvent = @getEventById(item.attr('data-id'))
+        # if @lastActiveItemId != item.id
+        #     if @popunderContainer
+        #         @popunderContainer.animate(
+        #             {height:'0px'},
+        #             400,
+        #             -> $(this).remove()
+        #         )
 
-    #         itemNumber = item.attr('data-number')
-    #         nextIndex = (@columns - itemNumber % @columns) - 1
-    #         console.log(nextIndex)
-    #         if @columns - 1 == nextIndex
-    #             lastItemInRow = item
-    #         else
-    #             lastItemInRow = item.nextAll(':eq(' + nextIndex + ')')
-    #         if @lastPopunder
-    #             @lastPopunder.animate({height:'0px'})
-    #             setTimeout(2000, =>
-    #                 @lastPopunder.remove())
+        #     itemNumber = item.attr('data-number')
+        #     nextIndex = (@columns - itemNumber % @columns) - 1
+        #     console.log(nextIndex)
+        #     if @columns - 1 == nextIndex
+        #         lastItemInRow = item
+        #     else
+        #         lastItemInRow = item.nextAll(':eq(' + nextIndex + ')')
+        #     if @lastPopunder
+        #         @lastPopunder.animate({height:'0px'})
+        #         setTimeout(2000, =>
+        #             @lastPopunder.remove())
             
-    #         # Insert spacer after last div in this row
-    #         @popunderContainer = $(@templates.popunder(currentEvent))
+        #     # Insert spacer after last div in this row
+        #     @popunderContainer = $(@templates.popunder(currentEvent))
             
-    #         @popunderContainer.insertAfter(lastItemInRow)
-    #         @popunderContainer.animate({height:'380px'})
-    #         @initPlayer(currentEvent)
+        #     @popunderContainer.insertAfter(lastItemInRow)
+        #     @popunderContainer.animate({height:'380px'})
+        #     @initPlayer(currentEvent)
 
-    #     @lastActiveItemId = item.id
+        # @lastActiveItemId = item.id
         
 
         
