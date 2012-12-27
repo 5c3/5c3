@@ -119,7 +119,12 @@ app.post('/events',adminAuth, function(req, res) {
                                 dateParts = obj.date.split("-");
                                 timeParts = obj.start.split(":");
                                 
-                                obj.timestamp = new Date(parseInt(dateParts[0]), (parseInt(dateParts[1]) - 1), parseInt(dateParts[2]),parseInt(timeParts[0])+1,parseInt(timeParts[1])).getTime()/1000;
+                                day = parseInt(dateParts[2]);
+                                if (parseInt(timeParts[0])<7) {
+                                    day++;
+                                }
+                                    
+                                obj.timestamp = new Date(parseInt(dateParts[0]), (parseInt(dateParts[1]) - 1),day ,parseInt(timeParts[0])+1,parseInt(timeParts[1])).getTime()/1000;
                                 obj.persons = [];
                                 try {
                                     for (p=0;p<eventJson.schedule.day[i].room[j].event[e].persons[0].person.length;p++) {
