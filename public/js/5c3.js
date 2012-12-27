@@ -92,7 +92,7 @@
     };
 
     FiveC3.prototype.typeaheadSorter = function(items) {
-      var item, newItems, _i, _len;
+      var item, lasttype, newItems, _i, _len;
       newItems = [];
       items.sort(function(a, b) {
         if (a.datatype === 'event' && b.datatype === 'speaker') {
@@ -119,14 +119,21 @@
         }
         return 0;
       });
+      lasttype = '';
+      newItems.push({
+        datatype: 'seperator',
+        value: '<div class="typeahead_seperator">Events</div>'
+      });
       for (_i = 0, _len = items.length; _i < _len; _i++) {
         item = items[_i];
-        if (typeof item.title === 'string') {
-          newItems.push(top.fiveC3.templates.typeahead(item));
+        if (item.datatype === 'speaker' && lasttype === 'event') {
+          newItems.push(newItems.push({
+            datatype: 'seperator',
+            value: '<div class="typeahead_seperator">Speakers</div>'
+          }));
         }
-        if (typeof item.name === 'string') {
-          newItems.push(top.fiveC3.templates.typeahead(item));
-        }
+        newItems.push(item);
+        lasttype = item.datatype;
       }
       return newItems;
     };
@@ -136,7 +143,13 @@
     };
 
     FiveC3.prototype.typeaheadHighlighter = function(item) {
-      return item;
+      if (typeof item.title === 'string') {
+        return top.fiveC3.templates.typeahead(item);
+      }
+      if (typeof item.name === 'string') {
+        return top.fiveC3.templates.typeahead(item);
+      }
+      return item.value;
     };
 
     FiveC3.prototype.filterEvents = function(filterattributes) {
@@ -224,7 +237,8 @@
       typeaheadOptions = {
         source: this.typeaheadSource,
         matcher: this.typeaheadMatcher,
-        sorter: this.typeaheadSorter
+        sorter: this.typeaheadSorter,
+        highlighter: this.typeaheadHighlighter
       };
       return this.typeahead = $('.search-query').typeahead(typeaheadOptions);
     };

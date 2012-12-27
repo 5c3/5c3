@@ -87,11 +87,15 @@ class FiveC3
                     return -1
             return 0
         )
+        lasttype = ''
+        newItems.push({datatype:'seperator', value: '<div class="typeahead_seperator">Events</div>'})
         for item in items
-            if typeof(item.title) == 'string'
-                newItems.push(top.fiveC3.templates.typeahead(item))
-            if typeof(item.name) == 'string'
-                newItems.push(top.fiveC3.templates.typeahead(item))
+            if item.datatype == 'speaker' and lasttype == 'event'
+                # Insert placeholder between events and speakers
+                newItems.push(newItems.push({datatype:'seperator', value: '<div class="typeahead_seperator">Speakers</div>'}))
+            newItems.push(item)
+
+            lasttype = item.datatype
 
         return newItems
 
@@ -101,7 +105,15 @@ class FiveC3
         return item
 
     typeaheadHighlighter: (item) ->
-        return item
+      #   var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+      #     return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+      #   return '<strong>' + match + '</strong>'
+      # })
+        if typeof(item.title) == 'string'
+            return(top.fiveC3.templates.typeahead(item))
+        if typeof(item.name) == 'string'
+            return(top.fiveC3.templates.typeahead(item))
+        return(item.value)
         # if typeof(item.title) == 'string'
         #     return item.title
         # if typeof(item.name) == 'string'
@@ -169,7 +181,7 @@ class FiveC3
             matcher: @typeaheadMatcher
             sorter: @typeaheadSorter
             # updater: @typeaheadUpdateort
-            # highlighter: @typeaheadHighlighter
+            highlighter: @typeaheadHighlighter
         }
         @typeahead = $('.search-query').typeahead(typeaheadOptions)
      
