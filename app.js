@@ -98,8 +98,6 @@ app.post('/events',adminAuth, function(req, res) {
                 
                 for (i=0;i<eventJson.schedule.day.length;i++) {
                     for (j=0;j<eventJson.schedule.day[i].room.length;j++) {
-                        console.log("------");
-                        console.log(eventJson.schedule.day[i].room[j]);
                         if (eventJson.schedule.day[i].room[j].event) {
                             for (e=0;e<eventJson.schedule.day[i].room[j].event.length;e++) {
                             
