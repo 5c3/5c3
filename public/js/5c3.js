@@ -325,6 +325,7 @@
       console.log(this.lastactiveitem.id);
       if (item.id !== this.lastactiveitem.id) {
         console.log('A item was clicked that"s not the previous one');
+        $('.popundercontent').html('');
         eventObject = this.getEventById(item._id);
         if (item.row !== this.lastactiveitem.row) {
           row = $('#row' + item.row);

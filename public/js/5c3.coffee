@@ -251,6 +251,7 @@ class FiveC3
         console.log(@lastactiveitem.id)
         if item.id != @lastactiveitem.id
             console.log('A item was clicked that"s not the previous one')
+            $('.popundercontent').html('')
             eventObject = @getEventById(item._id)
             if item.row != @lastactiveitem.row
                 row = $('#row' + item.row)
