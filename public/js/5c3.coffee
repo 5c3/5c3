@@ -201,6 +201,7 @@ class FiveC3
             item.tappable({
                 callback: top.fiveC3.onItemClick
                 cancelOnMove: true
+                touchDelay: 150
             })
             # item.bind("click",top.fiveC3.onItemClick)
 
