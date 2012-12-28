@@ -262,7 +262,18 @@
         url: '/events',
         datatype: 'json',
         success: function(dataFromServer) {
+          var event, _i, _len, _ref;
           _this.events = dataFromServer;
+          _ref = _this.events;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            event = _ref[_i];
+            if (event.conference === '29th Chaos Communication Congress') {
+              event.conferenceShort = '29c3';
+            }
+            if (event.conference === '28th Chaos Communication Congress') {
+              event.conferenceShort = '28c3';
+            }
+          }
           return _this.filterEvents();
         },
         async: true

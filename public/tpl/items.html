@@ -16,8 +16,10 @@
 			        <h2>{{=item.subtitle || ''}}<br />
 				        <span class="muted">{{=item.room || ''}} – {{=item.persons || ''}}</span>
 			        </h2>
-
 			    </div>	
+			    <div class="ribbonWrapper">
+			    	<div class="ribbon event_{{=item.conferenceShort}}">{{=item.conferenceShort}}</div>
+			    </div>
 			</div>
 		{{~}}
 	</div>

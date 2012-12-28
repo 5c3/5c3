@@ -208,6 +208,11 @@ class FiveC3
             datatype: 'json'
             success: (dataFromServer) =>
                 @events = dataFromServer
+                for event in @events
+                    if event.conference == '29th Chaos Communication Congress'
+                        event.conferenceShort = '29c3'
+                    if event.conference == '28th Chaos Communication Congress'
+                        event.conferenceShort = '28c3'
                 @filterEvents()
             async: true
         )
