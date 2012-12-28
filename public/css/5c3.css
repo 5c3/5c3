@@ -59,10 +59,10 @@ img{
 	height: 64px;
 }
 
-.typeahead li[data-type="event"] :first-child:before {
+.typeahead li[data-extraclass="firstevent"] :before {
 	content: "Events";
 }
-.typeahead li[data-type="speaker"] :first-child:before {
+.typeahead li[data-extraclass="firstspeaker"] :before {
 	content: "Speakers";
 }
 

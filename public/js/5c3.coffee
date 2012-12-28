@@ -111,10 +111,9 @@ class FiveC3
 
 
     typeaheadUpdater: (item) ->
-        console.log('Selected')
-        console.log(item)
-        console.log(this.query)
-        return item
+        top.fiveC3.filterEvents({title: item,person: item})
+        return(item)
+        
 
     typeaheadHighlighter: (item) ->
       #   var query = this.query.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
@@ -132,13 +131,16 @@ class FiveC3
         #     return item.name
 
     filterEvents: (filterattributes) =>
-        console.log('Filtering')
         @filterattributes = filterattributes
         filteredData = @events.slice(0)
         if @filterattributes
-            filteredData = filteredData.filter( (event) =>
+            filteredData = filteredData.filter( (item) =>
                 for k, v of @filterattributes
-                    if event[k] == v
+                    if k == 'person'
+                        for speaker in item.persons
+                            if speaker == v
+                                return true
+                    if item[k] == v
                         return true
                 return false
             )
@@ -167,6 +169,8 @@ class FiveC3
                 j = j + 1
                 @displayData.rows[j] = []
                 @displayData.rows[j].rownumber = j
+
+        @writeEvents()
 
 
     getTemplates: (templateFiles) =>
@@ -205,7 +209,6 @@ class FiveC3
             success: (dataFromServer) =>
                 @events = dataFromServer
                 @filterEvents()
-                @writeEvents()
             async: true
         )
         $.ajax( 

@@ -142,9 +142,10 @@
     };
 
     FiveC3.prototype.typeaheadUpdater = function(item) {
-      console.log('Selected');
-      console.log(item);
-      console.log(this.query);
+      top.fiveC3.filterEvents({
+        title: item,
+        person: item
+      });
       return item;
     };
 
@@ -159,18 +160,26 @@
     };
 
     FiveC3.prototype.filterEvents = function(filterattributes) {
-      var filteredData, i, item, j, _i, _len, _results,
+      var filteredData, i, item, j, _i, _len,
         _this = this;
-      console.log('Filtering');
       this.filterattributes = filterattributes;
       filteredData = this.events.slice(0);
       if (this.filterattributes) {
-        filteredData = filteredData.filter(function(event) {
-          var k, v, _ref;
+        filteredData = filteredData.filter(function(item) {
+          var k, speaker, v, _i, _len, _ref, _ref1;
           _ref = _this.filterattributes;
           for (k in _ref) {
             v = _ref[k];
-            if (event[k] === v) {
+            if (k === 'person') {
+              _ref1 = item.persons;
+              for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+                speaker = _ref1[_i];
+                if (speaker === v) {
+                  return true;
+                }
+              }
+            }
+            if (item[k] === v) {
               return true;
             }
           }
@@ -191,7 +200,6 @@
       this.displayData.rows = [];
       this.displayData.rows[0] = [];
       this.displayData.rows[0].rownumber = 0;
-      _results = [];
       for (_i = 0, _len = filteredData.length; _i < _len; _i++) {
         item = filteredData[_i];
         item.number = i;
@@ -201,12 +209,10 @@
         if (item.number % this.columns === this.columns - 1) {
           j = j + 1;
           this.displayData.rows[j] = [];
-          _results.push(this.displayData.rows[j].rownumber = j);
-        } else {
-          _results.push(void 0);
+          this.displayData.rows[j].rownumber = j;
         }
       }
-      return _results;
+      return this.writeEvents();
     };
 
     FiveC3.prototype.getTemplates = function(templateFiles) {
@@ -257,8 +263,7 @@
         datatype: 'json',
         success: function(dataFromServer) {
           _this.events = dataFromServer;
-          _this.filterEvents();
-          return _this.writeEvents();
+          return _this.filterEvents();
         },
         async: true
       });
