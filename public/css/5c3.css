@@ -17,7 +17,7 @@ img{
 }
 
 .popundercontent{
-	padding-left: 20px;
+	padding: 20px;
 	margin-bottom: 1.3%;
 	background: url("../img/whitey.png");
 	border-top: 1px #aaa solid;
@@ -278,3 +278,8 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c47b7b', end
   right: 0;
 }
 
+.player{
+	width: 50%;
+	float: right;
+	/*padding-top: 50px;*/
+}

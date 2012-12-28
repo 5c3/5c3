@@ -289,11 +289,20 @@
     };
 
     FiveC3.prototype.getEventById = function(id) {
-      var evnt, _i, _len, _ref;
+      var evnt, _i, _len, _ref,
+        _this = this;
       _ref = this.events;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         evnt = _ref[_i];
         if (evnt._id === id) {
+          $.ajax({
+            url: '/events/' + evnt._id,
+            datatype: 'json',
+            success: function(dataFromServer) {
+              return evnt = dataFromServer;
+            },
+            async: false
+          });
           return evnt;
         }
       }
@@ -315,7 +324,7 @@
           row = $('#row' + item.row);
           lastRow = $('#row' + this.lastactiveitem.row);
           lastRow.css('max-height', '0px');
-          row.css('max-height', '300px');
+          row.css('max-height', '900px');
         }
         top.replaceHtml('rowcontent_' + item.row, this.templates.popunder(eventObject));
         this.initPlayer(eventObject);

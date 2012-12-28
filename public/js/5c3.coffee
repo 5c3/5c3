@@ -227,6 +227,13 @@ class FiveC3
     getEventById: (id) =>
         for evnt in @events
             if evnt._id == id
+                $.ajax(
+                    url: '/events/' + evnt._id
+                    datatype: 'json'
+                    success: (dataFromServer) => 
+                        evnt = dataFromServer
+                    async: false
+                )
                 return evnt
         
 
@@ -245,7 +252,7 @@ class FiveC3
                 row = $('#row' + item.row)
                 lastRow = $('#row' + @lastactiveitem.row)
                 lastRow.css('max-height','0px')
-                row.css('max-height','300px')
+                row.css('max-height','900px')
 
             top.replaceHtml('rowcontent_'+ item.row,@templates.popunder(eventObject))
             @initPlayer(eventObject) 

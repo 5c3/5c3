@@ -1,4 +1,9 @@
-<div {{? it.status != 'upcoming'}}class="pull-left"{{?}}>
+{{? it.status != 'upcoming'}}
+<div class="player">
+		<video src="{{=it.video}}" type="video/mp4" style="width:100%;height:100%" preload="none" poster="/thumbs/{{=it._id}}/poster_640.jpg"></video>
+</div>
+{{?}}
+<div {{? it.status != 'upcoming'}} class=""{{?}}>
 	<h1>{{=it.title}}</h1>
 	<h2>{{=it.subtitle}}</h2>
 	<dl>
@@ -11,11 +16,8 @@
 	  <dt>Track</dt>
 	  <dd>Hacking</dd>
 	  <dt>Description</dt>
-	  <dd>{{=it.description}}</dd>
+	  <dd>{{=it.description || ''}}</dd>
+	  <dt>Abstract</dt>
+	  <dd>{{=it.abstract || ''}}</dd>
 	</dl>
 </div>
-{{? it.status != 'upcoming'}}
-<div class="player pull-right">
-		<video src="{{=it.video}}" type="video/mp4" style="width:100%;height:100%" preload="none" poster="/thumbs/{{=it._id}}/poster_640.jpg"></video>
-</div>
-{{?}}
