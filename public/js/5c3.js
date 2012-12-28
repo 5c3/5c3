@@ -250,7 +250,7 @@
       $('.item').each(function() {
         var item;
         item = $(this);
-        return item.click(top.fiveC3.onItemClick);
+        return item.bind("click touch", top.fiveC3.onItemClick);
       });
       typeaheadOptions = {
         source: this.typeaheadSource,

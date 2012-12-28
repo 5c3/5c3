@@ -194,7 +194,8 @@ class FiveC3
     writtenEvents: (items) =>
         $('.item').each( ->
             item = $(this)
-            item.click(top.fiveC3.onItemClick)
+            # .bind("click touch", function(){
+            item.bind("click touch",top.fiveC3.onItemClick)
         )
         typeaheadOptions = {
             source: @typeaheadSource
