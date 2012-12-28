@@ -17,7 +17,7 @@ var adminAuth = express.basicAuth(function(user,pwd) {
 
 
 //register view
-app.post(/event\/(.+)/, function(req, res) {
+app.post(/events\/(.+)/, function(req, res) {
     if (req.params[0]) {
         db.events.update({_id: req.params[0]}, { $inc: { popularity: 1 } }, function(err, saved) {
             if (err) res.send(500);
@@ -29,7 +29,7 @@ app.post(/event\/(.+)/, function(req, res) {
 });
 
 
-app.get(/event\/(.+)/, function(req, res) {
+app.get(/events\/(.+)/, function(req, res) {
     db.events.find({_id:req.params[0]}, function(err, event) {
         if (err) res.send(500);
         if (!event[0]) {res.send(404); return;}
