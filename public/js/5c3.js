@@ -46,7 +46,11 @@
       var templateFiles;
       this.events = [];
       this.typeaheadStrings;
-      this.columns = 5;
+      if (screen.width < 767) {
+        this.columns = 1;
+      } else {
+        this.columns = 5;
+      }
       this.lastactiveitem = {};
       this.displayData = {};
       this.templates = {};
@@ -250,7 +254,9 @@
       $('.item').each(function() {
         var item;
         item = $(this);
-        return item.bind("click touch", top.fiveC3.onItemClick);
+        return item.tappable({
+          callback: top.fiveC3.onItemClick
+        });
       });
       typeaheadOptions = {
         source: this.typeaheadSource,
@@ -332,6 +338,7 @@
           lastRow = $('#row' + this.lastactiveitem.row);
           lastRow.css('max-height', '0px');
           row.css('max-height', '900px');
+          $(window).scrollTop(row.position().top - 80);
         }
         top.replaceHtml('rowcontent_' + item.row, this.templates.popunder(eventObject));
         this.initPlayer(eventObject);

@@ -3,9 +3,9 @@
 		{{~row:item}}
 			<div class="span2 item {{? item.status == 'live'}} live {{?}}" data-row="{{=item.row}}" id='evnt{{=item._id}}' data-event-id='{{=item._id}}'>
 				{{? item.status == "past"}}
-					<img class="thumb hidden-phone" src="http://daten.der-begier.de/thumbs/{{=item._id || ''}}/1.jpg" alt="{{=item.title}}" />
+					<img class="thumb" src="http://daten.der-begier.de/thumbs/{{=item._id || ''}}/1.jpg" alt="{{=item.title}}" />
 				{{??}}
-					<img class="thumb hidden-phone" src="img/no_thumb.png" alt="{{=item.title}}" />
+					<img class="thumb" src="img/no_thumb.png" alt="{{=item.title}}" />
 				{{?}}
 				
 				{{? item.status == "live"}}
@@ -20,7 +20,7 @@
 			</div>
 		{{~}}
 	</div>
-	<div class="row-fluid popunder hidden-phone" id="row{{=row.rownumber}}">
+	<div class="row-fluid popunder" id="row{{=row.rownumber}}">
 		<div id="rowcontent_{{=row.rownumber}}" class="span10 popundercontent">
 		</div>
 	</div>

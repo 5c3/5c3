@@ -35,7 +35,10 @@ class FiveC3
     constructor: () ->
         @events = []
         @typeaheadStrings
-        @columns = 5
+        if screen.width < 767
+            @columns = 1
+        else
+            @columns = 5
         @lastactiveitem = {}
         @displayData = {} # Filtered and display ready data
 
@@ -195,7 +198,11 @@ class FiveC3
         $('.item').each( ->
             item = $(this)
             # .bind("click touch", function(){
-            item.bind("click touch",top.fiveC3.onItemClick)
+            item.tappable({
+                callback: top.fiveC3.onItemClick
+            })
+            # item.bind("click",top.fiveC3.onItemClick)
+
         )
         typeaheadOptions = {
             source: @typeaheadSource
@@ -259,6 +266,7 @@ class FiveC3
                 lastRow = $('#row' + @lastactiveitem.row)
                 lastRow.css('max-height','0px')
                 row.css('max-height','900px')
+                $(window).scrollTop(row.position().top - 80)
 
             top.replaceHtml('rowcontent_'+ item.row,@templates.popunder(eventObject))
             @initPlayer(eventObject) 
