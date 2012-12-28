@@ -255,7 +255,8 @@
         var item;
         item = $(this);
         return item.tappable({
-          callback: top.fiveC3.onItemClick
+          callback: top.fiveC3.onItemClick,
+          cancelOnMove: true
         });
       });
       typeaheadOptions = {

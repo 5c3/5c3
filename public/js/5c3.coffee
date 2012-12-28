@@ -200,6 +200,7 @@ class FiveC3
             # .bind("click touch", function(){
             item.tappable({
                 callback: top.fiveC3.onItemClick
+                cancelOnMove: true
             })
             # item.bind("click",top.fiveC3.onItemClick)
 
