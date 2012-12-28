@@ -10,26 +10,45 @@
     <link href="css/bootstrap.css" rel="stylesheet" media="screen">
   </head>
   <body>
-    <div class="navbar navbar-fixed-top navbar-inverse">
+    <div class="navbar navbar-inverse navbar-fixed-top">
       <div class="navbar-inner">
-        <a class="brand" href="#">5c3</a>
-          <form class="navbar-search pull-right">
-            <input type="text" class="search-query" placeholder="Search Talk or Speaker...">
-          </form>
-<!--     <div class="btn-group">
-          <button class="btn dropdown-toggle" data-toggle="dropdown">
-            29c3
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu">
-            <li>27c3</li>
-            <li>28c3</li>
-            <li>29c3</li>
-          </ul>
-        </div> -->
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">5c3</a>
+          <div class="nav-collapse collapse">
+            <form class="navbar-search pull-right">
+              <input type="text" class="search-query" placeholder="Search Talk or Speaker...">
+            </form>
+            <ul class="nav">
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
       </div>
     </div>
-    <div class="container-fluid" id="content">
+    <div class="container-fluid">
+        <!-- <div class="navbar-inner">
+          <a class="brand" href="#">5c3</a>
+            
+            <div class="btn-group">
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                29c3
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li>28c3</li>
+              <li>29c3</li>
+            </ul>
+          </div>
+        </div> -->
+      </div>
+      <div id="content">
+      </div>
     </div>
     
     <script src="js/jquery-1.7.2.min.js"></script>

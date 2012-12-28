@@ -62,6 +62,9 @@
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         evnt = _ref[_i];
         evnt.datatype = 'event';
+        if (evnt.title === 'Deutschlandfunk @ 29C3') {
+          continue;
+        }
         typeaheadSources.push(evnt);
       }
       _ref1 = this.speakers;
@@ -167,6 +170,9 @@
       if (this.filterattributes) {
         filteredData = filteredData.filter(function(item) {
           var k, speaker, v, _i, _len, _ref, _ref1;
+          if (item.title === 'Deutschlandfunk @ 29C3') {
+            return false;
+          }
           _ref = _this.filterattributes;
           for (k in _ref) {
             v = _ref[k];
@@ -299,7 +305,7 @@
             url: '/events/' + evnt._id,
             datatype: 'json',
             success: function(dataFromServer) {
-              return evnt = dataFromServer;
+              return jQuery.extend(evnt, dataFromServer);
             },
             async: false
           });

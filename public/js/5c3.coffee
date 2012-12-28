@@ -48,6 +48,8 @@ class FiveC3
         typeaheadSources = []
         for evnt in @events
             evnt.datatype = 'event'
+            if evnt.title == 'Deutschlandfunk @ 29C3'
+                continue
             typeaheadSources.push(evnt)
         for speaker in @speakers
             speaker.datatype = 'speaker'
@@ -135,6 +137,8 @@ class FiveC3
         filteredData = @events.slice(0)
         if @filterattributes
             filteredData = filteredData.filter( (item) =>
+                if item.title == 'Deutschlandfunk @ 29C3'
+                    return false
                 for k, v of @filterattributes
                     if k == 'person'
                         for speaker in item.persons
@@ -231,7 +235,7 @@ class FiveC3
                     url: '/events/' + evnt._id
                     datatype: 'json'
                     success: (dataFromServer) => 
-                        evnt = dataFromServer
+                        jQuery.extend(evnt,dataFromServer)
                     async: false
                 )
                 return evnt

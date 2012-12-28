@@ -57,7 +57,7 @@ app.get('/events', function(req, res) {
                 else if (docs[i].location == "Saal 6") docs[i].video = "http://cdn.29c3.fem-net.de/hls/saal6/saal6_hq.m3u8";
             } else {
                 docs[i].status = "past";
-                docs[i].video = "http://clips.vorwaerts-gmbh.de/big_buck_bunny.mp4";
+                docs[i].video = "http://ftp.ccc.de/congress/2012/mp4-h264-HQ/29c3-5095-en-privacy_and_the_car_of_the_future_h264.mp4";
             }            
         }
         
