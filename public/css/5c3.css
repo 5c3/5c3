@@ -253,3 +253,11 @@ img{
 
 
 
+.navbar .form-inline, .navbar .navbar-inner .btn-group{
+	margin: 0px;
+}
+
+.navbar .btn-toolbar {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
