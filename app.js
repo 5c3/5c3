@@ -45,20 +45,26 @@ app.get('/events', function(req, res) {
         if (err) res.send(500);
 
         for (i=0;i<docs.length;i++) {
-            
-            duration = docs[i].duration.split(":");
-            endtime = (docs[i].timestamp + parseInt(duration[0])*3600 + parseInt([1])*60);
-            
-            if (docs[i].timestamp>new Date().getTime()/1000) docs[i].status = "upcoming";
-            else if (endtime>new Date().getTime()/1000) {
-                docs[i].status = "live";
-                if (docs[i].location == "Saal 1") docs[i].video = "http://cdn.29c3.fem-net.de/hls/saal1/saal1_multi.m3u8";
-                else if (docs[i].location == "Saal 4") docs[i].video = "http://cdn.29c3.fem-net.de/hls/saal4/saal4_hq.m3u8";
-                else if (docs[i].location == "Saal 6") docs[i].video = "http://cdn.29c3.fem-net.de/hls/saal6/saal6_hq.m3u8";
-            } else {
-                docs[i].status = "past";
-                docs[i].video = "http://ftp.ccc.de/congress/2012/mp4-h264-HQ/29c3-5095-en-privacy_and_the_car_of_the_future_h264.mp4";
-            }            
+            try
+            {
+                duration = docs[i].duration.split(":");
+                endtime = (docs[i].timestamp + parseInt(duration[0])*3600 + parseInt([1])*60);
+                
+                if (docs[i].timestamp>new Date().getTime()/1000) docs[i].status = "upcoming";
+                else if (endtime>new Date().getTime()/1000) {
+                    docs[i].status = "live";
+                    if (docs[i].location == "Saal 1") docs[i].video = "http://cdn.29c3.fem-net.de/hls/saal1/saal1_multi.m3u8";
+                    else if (docs[i].location == "Saal 4") docs[i].video = "http://cdn.29c3.fem-net.de/hls/saal4/saal4_hq.m3u8";
+                    else if (docs[i].location == "Saal 6") docs[i].video = "http://cdn.29c3.fem-net.de/hls/saal6/saal6_hq.m3u8";
+                } else {
+                    docs[i].status = "past";
+                    docs[i].video = "http://ftp.ccc.de/congress/2012/mp4-h264-HQ/29c3-5095-en-privacy_and_the_car_of_the_future_h264.mp4";
+                }
+            }
+            catch (error) {
+                console.log('Problem parsing: ' + docs[i]);
+                console.log(error)  
+            }   
         }
         
         res.json(docs);

@@ -37,15 +37,29 @@ class FiveC3
         @typeaheadStrings
         if screen.width < 767
             @columns = 1
+        # else if screen.width < 1025
+        #     @columns = 4
         else
             @columns = 5
         @lastactiveitem = {}
         @displayData = {} # Filtered and display ready data
 
+        $('.conferenceFilter').click(@onClickConferenceFilter)
+
         @templates = {} # Contains the template functions
         templateFiles = ['item', 'items','popunder','typeahead'] # Provide a list of files to fetch. Leave .html away
         @getTemplates(templateFiles)
         @refreshEventData()
+
+    onClickConferenceFilter: (e) =>
+        e.stopPropagation()
+        e.preventDefault()
+        $('.conferenceFilter').removeClass('active')
+        $(e.currentTarget).addClass('active')
+        selectedConferenceTitle = $(e.currentTarget).attr('data-conference-title')
+        @filterEvents({conference:selectedConferenceTitle})
+
+
 
     typeaheadSource: (query, callback) =>
         typeaheadSources = []
@@ -136,6 +150,8 @@ class FiveC3
 
     filterEvents: (filterattributes) =>
         @filterattributes = filterattributes
+        console.log('Filtering:')
+        console.log(filterattributes)
         filteredData = @events.slice(0)
         if @filterattributes
             filteredData = filteredData.filter( (item) =>
@@ -225,6 +241,8 @@ class FiveC3
                         event.conferenceShort = '29c3'
                     if event.conference == '28th Chaos Communication Congress'
                         event.conferenceShort = '28c3'
+                    if event.conference == '27th Chaos Communication Congress'
+                        event.conferenceShort = '27c3'
                 @filterEvents()
             async: true
         )
@@ -296,6 +314,8 @@ class FiveC3
     
     playcount: =>
         $.post "/event/" + @activeEvent, (data) ->
+
+
 
     
 

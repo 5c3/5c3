@@ -23,10 +23,17 @@
             <form class="navbar-search pull-right">
               <input type="text" class="search-query" placeholder="Search Talk or Speaker...">
             </form>
-            <ul class="nav">
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-            </ul>
+              <form class="form-inline">
+                <div class="btn-toolbar">
+                  <div class="btn-group">
+                 
+                    <a class="conferenceFilter btn" data-conference-title="27th Chaos Communication Congress">27c3</a>
+                    <a class="conferenceFilter btn" data-conference-title="28th Chaos Communication Congress">28c3</a>
+                    <a class="conferenceFilter btn active" data-conference-title="29th Chaos Communication Congress">29c3</a>
+                    <a class="conferenceFilter btn" data-conference-title="">Alle</a>
+                  </div>
+                </div>
+              </form>
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -52,6 +59,7 @@
     </div>
     
     <script src="js/jquery-1.8.3.js"></script>
+    <script src="js/jquery.bbq.min.js"></script>
     <script src="js/bootstrap.js"></script>
     <!-- // <script src="js/jquery.tappable.js"></script> -->
     <script src="js/mediaelement-and-player.min.js"></script>

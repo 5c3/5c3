@@ -43,6 +43,8 @@
 
       this.typeaheadSource = __bind(this.typeaheadSource, this);
 
+      this.onClickConferenceFilter = __bind(this.onClickConferenceFilter, this);
+
       var templateFiles;
       this.events = [];
       this.typeaheadStrings;
@@ -53,11 +55,24 @@
       }
       this.lastactiveitem = {};
       this.displayData = {};
+      $('.conferenceFilter').click(this.onClickConferenceFilter);
       this.templates = {};
       templateFiles = ['item', 'items', 'popunder', 'typeahead'];
       this.getTemplates(templateFiles);
       this.refreshEventData();
     }
+
+    FiveC3.prototype.onClickConferenceFilter = function(e) {
+      var selectedConferenceTitle;
+      e.stopPropagation();
+      e.preventDefault();
+      $('.conferenceFilter').removeClass('active');
+      $(e.currentTarget).addClass('active');
+      selectedConferenceTitle = $(e.currentTarget).attr('data-conference-title');
+      return this.filterEvents({
+        conference: selectedConferenceTitle
+      });
+    };
 
     FiveC3.prototype.typeaheadSource = function(query, callback) {
       var evnt, speaker, typeaheadSources, _i, _j, _len, _len1, _ref, _ref1;
@@ -169,6 +184,8 @@
       var filteredData, i, item, j, _i, _len,
         _this = this;
       this.filterattributes = filterattributes;
+      console.log('Filtering:');
+      console.log(filterattributes);
       filteredData = this.events.slice(0);
       if (this.filterattributes) {
         filteredData = filteredData.filter(function(item) {
@@ -281,6 +298,9 @@
             }
             if (event.conference === '28th Chaos Communication Congress') {
               event.conferenceShort = '28c3';
+            }
+            if (event.conference === '27th Chaos Communication Congress') {
+              event.conferenceShort = '27c3';
             }
           }
           return _this.filterEvents();
