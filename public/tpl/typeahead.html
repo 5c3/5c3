@@ -1,9 +1,9 @@
 {{? it.datatype == 'event'}}
 	<div class="typeahead_event">
 		{{? it.status == "past"}}
-					<img class="thumb hidden-phone" src="http://daten.der-begier.de/thumbs/{{=it._id || ''}}/poster_64.jpg" alt="{{=it.title}}" />
+					<img class="thumb" src="http://daten.der-begier.de/thumbs/{{=it._id || ''}}/poster_64.jpg" alt="{{=it.title}}" />
 				{{??}}
-					<img class="thumb hidden-phone" src="img/no_thumb.png" alt="{{=it.title}}" />
+					<img class="thumb" src="img/no_thumb.png" alt="{{=it.title}}" />
 				{{?}}
 		<h1>{{= it.title}}</h1>
 		<h2>{{= it.subtitle || ''}}<br />
@@ -12,5 +12,8 @@
 	</div>
 
 {{??}}
-	<div class="typeahead_person">{{= it.name}}</div>
+	<div class="typeahead_person">
+		<img class="thumb" src="http://daten.der-begier.de/people/person-{{=it._id}}-48x48.png" />
+		<h1>{{= it.name}}</h1>
+	</div>
 {{?}}

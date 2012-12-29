@@ -140,7 +140,6 @@
           item.selectedValue = item.name;
         } else {
           item.selectedValue = item.title;
-          console.log(item.title);
         }
         newItems.push(item);
         lasttype = item.datatype;
@@ -254,11 +253,7 @@
       $('.item').each(function() {
         var item;
         item = $(this);
-        return item.tappable({
-          callback: top.fiveC3.onItemClick,
-          cancelOnMove: true,
-          touchDelay: 150
-        });
+        return item.bind("click", top.fiveC3.onItemClick);
       });
       typeaheadOptions = {
         source: this.typeaheadSource,
@@ -339,7 +334,7 @@
           row = $('#row' + item.row);
           lastRow = $('#row' + this.lastactiveitem.row);
           lastRow.css('max-height', '0px');
-          row.css('max-height', '900px');
+          row.css('max-height', '1200px');
           $(window).scrollTop(row.position().top - 80);
         }
         top.replaceHtml('rowcontent_' + item.row, this.templates.popunder(eventObject));

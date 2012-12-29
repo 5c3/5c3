@@ -6,14 +6,19 @@ img{
 	border: 0px;
 }
 
+
 .popunder{
 	max-height: 0px;
 	overflow: hidden;
-	-webkit-transition: all 0.6s ease-in-out;
-	-moz-transition: all 0.6s ease-in-out;
-	-o-transition: all 0.6s ease-in-out;
-	transition: all 0.6s ease-in-out;
-	/*display: none;*/
+}
+
+@media (min-device-width: 1025px) {
+	.popunder{
+		-webkit-transition: all 0.6s ease-in-out;
+		-moz-transition: all 0.6s ease-in-out;
+		-o-transition: all 0.6s ease-in-out;
+		transition: all 0.6s ease-in-out;
+	}
 }
 
 .popundercontent{
@@ -37,7 +42,7 @@ img{
 	font-size: 1.5em;
 }
 
-.typeahead_event{
+.typeahead_event, .typeahead_person{
 	line-height: 0.7em;
 }
 
@@ -46,13 +51,13 @@ img{
 }
 
 
-.typeahead_event h1, .typeahead_event h2 {
+.typeahead_event h1, .typeahead_event h2, .typeahead_person h1{
 	margin: 0;
 	line-height: 1em;
 }
 
 
-.typeahead_event h1{
+.typeahead_event h1, .typeahead_person h1{
 	font-size: 1em;
 	padding: 5px;
 	margin-left: 70px;
@@ -70,7 +75,7 @@ img{
 	text-overflow: ellipsis;
 }
 
-.typeahead_event img{
+.typeahead_event img, .typeahead_person img{
 	display: inline;
 	float:left;
 	width: 64px;
@@ -216,9 +221,13 @@ img{
 	display: none;
 }
 
-.item:hover h2 {
-	display: block;
+@media (min-device-width: 1025px) {
+	.item:hover h2 {
+		display: block;
+	}
 }
+
+
 
 .item video {
 	display: none;

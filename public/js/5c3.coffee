@@ -106,7 +106,6 @@ class FiveC3
                 # console.log(item.name)
             else
                 item.selectedValue = item.title
-                console.log(item.title)
             newItems.push(item)
 
             lasttype = item.datatype
@@ -197,13 +196,12 @@ class FiveC3
     writtenEvents: (items) =>
         $('.item').each( ->
             item = $(this)
-            # .bind("click touch", function(){
-            item.tappable({
-                callback: top.fiveC3.onItemClick
-                cancelOnMove: true
-                touchDelay: 150
-            })
-            # item.bind("click",top.fiveC3.onItemClick)
+            # item.tappable({
+            #     callback: top.fiveC3.onItemClick
+            #     cancelOnMove: true
+            #     touchDelay: 500
+            # })
+            item.bind("click",top.fiveC3.onItemClick)
 
         )
         typeaheadOptions = {
@@ -267,7 +265,7 @@ class FiveC3
                 row = $('#row' + item.row)
                 lastRow = $('#row' + @lastactiveitem.row)
                 lastRow.css('max-height','0px')
-                row.css('max-height','900px')
+                row.css('max-height','1200px')
                 $(window).scrollTop(row.position().top - 80)
 
             top.replaceHtml('rowcontent_'+ item.row,@templates.popunder(eventObject))
