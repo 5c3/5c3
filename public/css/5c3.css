@@ -42,6 +42,13 @@ img{
 	font-size: 1.5em;
 }
 
+.typeahead {
+	right: 10px;
+	left: auto !important;
+	width: 400px;
+	z-index: 2000;
+}
+
 .typeahead_event, .typeahead_person{
 	line-height: 0.7em;
 }
@@ -54,6 +61,9 @@ img{
 .typeahead_event h1, .typeahead_event h2, .typeahead_person h1{
 	margin: 0;
 	line-height: 1em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 
@@ -99,22 +109,15 @@ img{
 	height: 64px;
 }
 
-.typeahead li[data-extraclass="firstevent"] :first-child:before {
+
+#firstevent:before {
 	content: "Events";
 }
-.typeahead li[data-extraclass="firstspeaker"] :first-child:before {
+#firstspeaker:before {
 	content: "Speakers";
 }
 
-
-[data-extraclass="firstevent"]:before {
-	content: "Events";
-}
-[data-extraclass="firstspeaker"]:before {
-	content: "Speakers";
-}
-
-.typeahead li[data-extraclass="firstevent"]:before, .typeahead li[data-extraclass="firstspeaker"]:before {
+#firstevent:before, #firstspeaker:before {
 	display: block;
 	border-top: 1px solid #c9c8c9;
 	border-bottom: 1px solid #c9c8c9;
@@ -131,7 +134,7 @@ img{
 	font-weight: bold;
 }
 
-.dropdown-menu li > a {
+.dropdown-menu, .dropdown-menu li > a {
 	padding: 0 !important;
 }
 
