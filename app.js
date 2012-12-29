@@ -1,7 +1,7 @@
 /* setup */
 var password = "asd";
 var express = require('express');
-var appPort = 8005;
+var appPort = 8003;
 var collections = ["events","speakers"]
 var db = require("mongojs").connect("5c3", collections);
 var app = express();
@@ -17,8 +17,8 @@ var adminAuth = express.basicAuth(function(user,pwd) {
 
 
 //register view
-/*
-app.post(/events\/(.+)/,adminAuth, function(req, res) {
+
+app.post(/viewcount\/(.+)/,adminAuth, function(req, res) {
     if (req.params[0]) {
         db.events.update({_id: req.params[0]}, { $inc: { popularity: 1 } }, function(err, saved) {
             if (err) res.send(500);
@@ -28,7 +28,7 @@ app.post(/events\/(.+)/,adminAuth, function(req, res) {
         res.send(400);
     }
 });
-*/
+
 
 //update events
 app.post(/event\/(.+)/ , adminAuth , function(req, res) {
