@@ -72,6 +72,14 @@
         url = $.bbq.getState();
         query = $.deparam.querystring(window.location.search);
         console.log(url.conference);
+        if (url.searchquery) {
+          console.log('Searching for ' + url.searchquery);
+          _this.filterEvents({
+            title: url.searchquery,
+            name: url.searchquery
+          });
+          return;
+        }
         if (!url.conference) {
           jQuery.bbq.pushState({
             conference: '29th Chaos Communication Congress'
@@ -90,7 +98,9 @@
           }
           _this.lastconference = url.conference;
         }
-        return _this.showItem(url.event);
+        if (url.event) {
+          return _this.showItem(url.event);
+        }
       });
       return $(window).trigger("hashchange");
     };
@@ -112,10 +122,13 @@
     };
 
     FiveC3.prototype.onItemClick = function(e) {
+      var state;
       console.log('Click');
+      state = jQuery.bbq.getState();
       return jQuery.bbq.pushState({
-        event: $(e.currentTarget).attr('data-event-id')
-      });
+        event: $(e.currentTarget).attr('data-event-id'),
+        conference: state.conference
+      }, 2);
     };
 
     FiveC3.prototype.typeaheadSource = function(query, callback) {
@@ -211,10 +224,10 @@
     };
 
     FiveC3.prototype.typeaheadUpdater = function(item) {
-      top.fiveC3.filterEvents({
-        title: item,
-        person: item
-      });
+      jQuery.bbq.pushState({
+        searchquery: item,
+        conference: 'Alle'
+      }, 2);
       return item;
     };
 

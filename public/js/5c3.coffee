@@ -66,6 +66,12 @@ class FiveC3
             query = $.deparam.querystring( window.location.search );
 
             console.log(url.conference)
+            if url.searchquery
+                console.log('Searching for ' + url.searchquery)
+                @filterEvents({title:url.searchquery,name:url.searchquery})
+                return
+
+
             if !url.conference
                 jQuery.bbq.pushState({conference:'29th Chaos Communication Congress'})
                 return
@@ -78,8 +84,10 @@ class FiveC3
                 else
                     @filterEvents({conference:url.conference})
                 @lastconference = url.conference
+
             
-            @showItem(url.event)
+            if url.event
+                @showItem(url.event)
             
 
 
@@ -103,7 +111,8 @@ class FiveC3
 
     onItemClick: (e) =>
         console.log('Click')
-        jQuery.bbq.pushState({event:$(e.currentTarget).attr('data-event-id')})
+        state = jQuery.bbq.getState()
+        jQuery.bbq.pushState({event:$(e.currentTarget).attr('data-event-id'),conference:state.conference},2)
 
 
 
@@ -178,7 +187,8 @@ class FiveC3
 
 
     typeaheadUpdater: (item) ->
-        top.fiveC3.filterEvents({title: item,person: item})
+        jQuery.bbq.pushState({searchquery: item, conference: 'Alle'},2)
+        # top.fiveC3.filterEvents()
         return(item)
         
 
