@@ -368,7 +368,7 @@ class FiveC3
         )
     
     playcount: =>
-        $.post "/event/" + @activeEvent, (data) ->
+        $.post "/viewcount/" + @activeEvent, (data) ->
 
 
 

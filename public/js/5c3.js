@@ -443,7 +443,7 @@
     };
 
     FiveC3.prototype.playcount = function() {
-      return $.post("/event/" + this.activeEvent, function(data) {});
+      return $.post("/viewcount/" + this.activeEvent, function(data) {});
     };
 
     return FiveC3;
