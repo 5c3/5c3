@@ -1,7 +1,7 @@
 /* setup */
 var password = "asd";
 var express = require('express');
-var appPort = 8003;
+var appPort = 8005;
 var collections = ["events","speakers"]
 var db = require("mongojs").connect("5c3", collections);
 var app = express();

@@ -207,8 +207,13 @@ img{
 
 
 .live-indicator {
-	color: #b94a48;
+	background-color: #b94a48;
 	position: absolute;
+	height: 16px;
+	width: 16px;
+	border-radius: 8px;
+	-moz-border-radius: 8px;
+	-webkit-border-radius: 8px;
 	top: 5px;
 	right: 5px;
 	z-index: 200;
