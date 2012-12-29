@@ -12,12 +12,13 @@ app.use(express.static(__dirname + '/public'));
 
 //authentication
 var adminAuth = express.basicAuth(function(user,pwd) {
-    return (pwd = password);
+    return (pwd == password) ? true : false;
 }, 'Restrict area, please identify');
 
 
 //register view
-app.post(/events\/(.+)/, function(req, res) {
+/*
+app.post(/events\/(.+)/,adminAuth, function(req, res) {
     if (req.params[0]) {
         db.events.update({_id: req.params[0]}, { $inc: { popularity: 1 } }, function(err, saved) {
             if (err) res.send(500);
@@ -26,6 +27,31 @@ app.post(/events\/(.+)/, function(req, res) {
     } else {
         res.send(400);
     }
+});
+*/
+
+//update events
+app.post(/event\/(.+)/ , adminAuth , function(req, res) {
+    
+    if (req.params[0]) {
+        db.events.findOne({_id: req.params[0]}, function(err, doc) {
+            if (err) res.send(500);
+            
+            for (key in req.body) {
+                doc[key] = req.body[key];
+            }
+            
+            console.log(doc);
+            db.events.update({_id: req.params[0]}, doc, function(err, saved) {
+                if (err) res.send(500);
+                res.send(201);
+            });
+            
+        });
+    } else {
+        res.send(400);
+    }
+    
 });
 
 
@@ -58,7 +84,6 @@ app.get('/events', function(req, res) {
                     else if (docs[i].location == "Saal 6") docs[i].video = "http://cdn.29c3.fem-net.de/hls/saal6/saal6_hq.m3u8";
                 } else {
                     docs[i].status = "past";
-                    docs[i].video = "http://ftp.ccc.de/congress/2012/mp4-h264-HQ/29c3-5095-en-privacy_and_the_car_of_the_future_h264.mp4";
                 }
             }
             catch (error) {
@@ -128,6 +153,7 @@ app.post('/events',adminAuth, function(req, res) {
                                 obj.type = eventJson.schedule.day[i].room[j].event[e].type[0];
                                 obj.language = eventJson.schedule.day[i].room[j].event[e].language[0];
                                 
+                                
                                 dateParts = obj.date.split("-");
                                 timeParts = obj.start.split(":");
                                 
@@ -142,7 +168,6 @@ app.post('/events',adminAuth, function(req, res) {
                                     for (p=0;p<eventJson.schedule.day[i].room[j].event[e].persons[0].person.length;p++) {
                                         obj.persons.push(eventJson.schedule.day[i].room[j].event[e].persons[0].person[p]["_"]);
                                         currentSpeaker = {"name":eventJson.schedule.day[i].room[j].event[e].persons[0].person[p]["_"],"_id":eventJson.schedule.day[i].room[j].event[e].persons[0].person[p]["$"].id};
-                                        console.log("speaker"+eventJson.schedule.day[i].room[j].event[e].persons[0].person[p]["$"].id);
                                         db.speakers.update({"_id":eventJson.schedule.day[i].room[j].event[e].persons[0].person[p]["$"].id},currentSpeaker, {upsert:true}, function (err,saved) {});
                                         
                                     }
@@ -155,11 +180,20 @@ app.post('/events',adminAuth, function(req, res) {
                                     }
                                 } catch (e) {}
                                 
-                                
                                 obj.description = eventJson.schedule.day[i].room[j].event[e].description[0];
                                 obj.abstract = eventJson.schedule.day[i].room[j].event[e].abstract[0];
+                                
+                                
+                                for (key in obj) {
+                                    try {
+                                        if (Object.keys(obj[key]).length === 0) delete obj[key];
+                                        if (obj[key]==[]) delete obj[key];
+                                        if (obj[key].length == 0) delete obj[key];
+                                        if (obj[key]=="") delete obj[key];    
+                                    } catch (e) {}
+                                }
                                 events.push(obj);
-                                //db.events.save(obj, function(err, saved) {});
+                                
                             }
                         }
                     }
