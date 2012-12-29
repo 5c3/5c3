@@ -44,13 +44,12 @@ class FiveC3
         @lastactiveitem = {}
         @displayData = {} # Filtered and display ready data
 
-        $('.conferenceFilter').click(@onClickConferenceFilter)
+        $('.conferenceFilter').click(@onConferenceFilterClick)
 
         @templates = {} # Contains the template functions
         templateFiles = ['item', 'items','popunder','typeahead'] # Provide a list of files to fetch. Leave .html away
         @getTemplates(templateFiles)
         @refreshEventData( =>
-            @filterEvents({conference:'29th Chaos Communication Congress'})
             @initBbq()
         )
 
@@ -62,7 +61,7 @@ class FiveC3
         $("a").click( ->
             href = $(this).attr( "href" )
             # // Push this URL "state" onto the history hash.
-            $.bbq.pushState({ url: href })
+            # $.bbq.pushState({ url: href })
             # // Prevent the default click behavior.
             return false
         )
@@ -72,12 +71,28 @@ class FiveC3
             # // In jQuery 1.4, use e.getState( "url" );
             url = $.bbq.getState();
             query = $.deparam.querystring( window.location.search );
-            if url.event
-                @showItem(url.event)
+
+            console.log(url.conference)
+            if !url.conference
+                jQuery.bbq.pushState({conference:'29th Chaos Communication Congress'})
+                return
+
+            if @lastconference != url.conference
+                if url.conference == 'Alle'
+                    $('.conferenceFilter').removeClass('active')
+                    $('[data-conference-title=Alle]').addClass('active') 
+                    @filterEvents()
+                else
+                    @filterEvents({conference:url.conference})
+                @lastconference = url.conference
+            
+            @showItem(url.event)
+
             console.log('URL:')
             console.log(url)
             console.log('Query:')
             console.log(query)
+            
 
 
             # // You probably want to actually do something useful here..
@@ -87,16 +102,20 @@ class FiveC3
         # // loaded with.
         $(window).trigger( "hashchange" )
 
-
-    onClickConferenceFilter: (e) =>
+    onConferenceFilterClick: (e) =>
         e.preventDefault()
+        e.stopPropagation()
         $('.conferenceFilter').removeClass('active')
         $(e.currentTarget).addClass('active')
         selectedConferenceTitle = $(e.currentTarget).attr('data-conference-title')
         if selectedConferenceTitle
-            @filterEvents({conference:selectedConferenceTitle})
+            jQuery.bbq.pushState({conference:selectedConferenceTitle})
         else
             @filterEvents()
+
+    onItemClick: (e) =>
+        console.log('Click')
+        jQuery.bbq.pushState({event:$(e.currentTarget).attr('data-event-id')})
 
 
 
@@ -189,7 +208,7 @@ class FiveC3
 
     filterEvents: (filterattributes) =>
         @filterattributes = filterattributes
-        console.log('Filtering:')
+        console.log('Filter Attributes:')
         console.log(filterattributes)
         filteredData = @events.slice(0)
         if @filterattributes
@@ -306,34 +325,28 @@ class FiveC3
                 return evnt
         
 
-    onItemClick: (e) =>
-        jQuery.bbq.pushState({event:$(e.currentTarget).attr('data-event-id')})
-
     showItem: (eventid) =>
         console.log('Showing: ' + eventid)
-        item = $('[data-event-id=' + eventid + ']')
-        item.id = item.attr('id')
-        item.row = item.attr('data-row')
-        $('.popundercontent').html('')
-        eventObject = @getEventById(eventid)
-        if item.row != @lastactiveitem.row
-            row = $('#row' + item.row)
-            lastRow = $('#row' + @lastactiveitem.row)
-            lastRow.css('max-height','0px')
-            row.css('max-height','500px')
-            $(window).scrollTop(row.position().top - 80)
+        if eventid
+            item = $('[data-event-id=' + eventid + ']')
+            item.id = item.attr('id')
+            item.row = item.attr('data-row')
+            $('.popundercontent').html('')
+            eventObject = @getEventById(eventid)
+            if item.row != @lastactiveitem.row
+                row = $('#row' + item.row)
+                lastRow = $('#row' + @lastactiveitem.row)
+                lastRow.css('max-height','0px')
+                row.css('max-height','500px')
+                row.css('margin-bottom','20px')
+                $(window).scrollTop(row.position().top - 80)
 
-        top.replaceHtml('rowcontent_'+ item.row,@templates.popunder(eventObject))
-        @initPlayer(eventObject) 
-        @lastactiveitem = item      
-
-    onItemMouseMove: (e) =>
-        # 
-
-            # ...
-    itemAdded: (addedItem) =>
-        addedItem.click(@onItemClick)
-        addedItem.mousemove(@onItemMouseMove)
+            top.replaceHtml('rowcontent_'+ item.row,@templates.popunder(eventObject))
+            @initPlayer(eventObject) 
+            @lastactiveitem = item
+        else
+            @lastactiveitem = {}
+            $('.popunder').css('max-height','0px')
         
         
     initPlayer: (evnt) =>

@@ -25,13 +25,7 @@
 
       this.initPlayer = __bind(this.initPlayer, this);
 
-      this.itemAdded = __bind(this.itemAdded, this);
-
-      this.onItemMouseMove = __bind(this.onItemMouseMove, this);
-
       this.showItem = __bind(this.showItem, this);
-
-      this.onItemClick = __bind(this.onItemClick, this);
 
       this.getEventById = __bind(this.getEventById, this);
 
@@ -45,7 +39,9 @@
 
       this.typeaheadSource = __bind(this.typeaheadSource, this);
 
-      this.onClickConferenceFilter = __bind(this.onClickConferenceFilter, this);
+      this.onItemClick = __bind(this.onItemClick, this);
+
+      this.onConferenceFilterClick = __bind(this.onConferenceFilterClick, this);
 
       this.initBbq = __bind(this.initBbq, this);
 
@@ -60,14 +56,11 @@
       }
       this.lastactiveitem = {};
       this.displayData = {};
-      $('.conferenceFilter').click(this.onClickConferenceFilter);
+      $('.conferenceFilter').click(this.onConferenceFilterClick);
       this.templates = {};
       templateFiles = ['item', 'items', 'popunder', 'typeahead'];
       this.getTemplates(templateFiles);
       this.refreshEventData(function() {
-        _this.filterEvents({
-          conference: '29th Chaos Communication Congress'
-        });
         return _this.initBbq();
       });
     }
@@ -77,18 +70,32 @@
       $("a").click(function() {
         var href;
         href = $(this).attr("href");
-        $.bbq.pushState({
-          url: href
-        });
         return false;
       });
       $(window).bind("hashchange", function(e) {
         var query, url;
         url = $.bbq.getState();
         query = $.deparam.querystring(window.location.search);
-        if (url.event) {
-          _this.showItem(url.event);
+        console.log(url.conference);
+        if (!url.conference) {
+          jQuery.bbq.pushState({
+            conference: '29th Chaos Communication Congress'
+          });
+          return;
         }
+        if (_this.lastconference !== url.conference) {
+          if (url.conference === 'Alle') {
+            $('.conferenceFilter').removeClass('active');
+            $('[data-conference-title=Alle]').addClass('active');
+            _this.filterEvents();
+          } else {
+            _this.filterEvents({
+              conference: url.conference
+            });
+          }
+          _this.lastconference = url.conference;
+        }
+        _this.showItem(url.event);
         console.log('URL:');
         console.log(url);
         console.log('Query:');
@@ -97,19 +104,27 @@
       return $(window).trigger("hashchange");
     };
 
-    FiveC3.prototype.onClickConferenceFilter = function(e) {
+    FiveC3.prototype.onConferenceFilterClick = function(e) {
       var selectedConferenceTitle;
       e.preventDefault();
+      e.stopPropagation();
       $('.conferenceFilter').removeClass('active');
       $(e.currentTarget).addClass('active');
       selectedConferenceTitle = $(e.currentTarget).attr('data-conference-title');
       if (selectedConferenceTitle) {
-        return this.filterEvents({
+        return jQuery.bbq.pushState({
           conference: selectedConferenceTitle
         });
       } else {
         return this.filterEvents();
       }
+    };
+
+    FiveC3.prototype.onItemClick = function(e) {
+      console.log('Click');
+      return jQuery.bbq.pushState({
+        event: $(e.currentTarget).attr('data-event-id')
+      });
     };
 
     FiveC3.prototype.typeaheadSource = function(query, callback) {
@@ -222,7 +237,7 @@
       var filteredData, i, item, j, _i, _len,
         _this = this;
       this.filterattributes = filterattributes;
-      console.log('Filtering:');
+      console.log('Filter Attributes:');
       console.log(filterattributes);
       filteredData = this.events.slice(0);
       if (this.filterattributes) {
@@ -375,37 +390,30 @@
       }
     };
 
-    FiveC3.prototype.onItemClick = function(e) {
-      return jQuery.bbq.pushState({
-        event: $(e.currentTarget).attr('data-event-id')
-      });
-    };
-
     FiveC3.prototype.showItem = function(eventid) {
       var eventObject, item, lastRow, row;
       console.log('Showing: ' + eventid);
-      item = $('[data-event-id=' + eventid + ']');
-      item.id = item.attr('id');
-      item.row = item.attr('data-row');
-      $('.popundercontent').html('');
-      eventObject = this.getEventById(eventid);
-      if (item.row !== this.lastactiveitem.row) {
-        row = $('#row' + item.row);
-        lastRow = $('#row' + this.lastactiveitem.row);
-        lastRow.css('max-height', '0px');
-        row.css('max-height', '500px');
-        $(window).scrollTop(row.position().top - 80);
+      if (eventid) {
+        item = $('[data-event-id=' + eventid + ']');
+        item.id = item.attr('id');
+        item.row = item.attr('data-row');
+        $('.popundercontent').html('');
+        eventObject = this.getEventById(eventid);
+        if (item.row !== this.lastactiveitem.row) {
+          row = $('#row' + item.row);
+          lastRow = $('#row' + this.lastactiveitem.row);
+          lastRow.css('max-height', '0px');
+          row.css('max-height', '500px');
+          row.css('margin-bottom', '20px');
+          $(window).scrollTop(row.position().top - 80);
+        }
+        top.replaceHtml('rowcontent_' + item.row, this.templates.popunder(eventObject));
+        this.initPlayer(eventObject);
+        return this.lastactiveitem = item;
+      } else {
+        this.lastactiveitem = {};
+        return $('.popunder').css('max-height', '0px');
       }
-      top.replaceHtml('rowcontent_' + item.row, this.templates.popunder(eventObject));
-      this.initPlayer(eventObject);
-      return this.lastactiveitem = item;
-    };
-
-    FiveC3.prototype.onItemMouseMove = function(e) {};
-
-    FiveC3.prototype.itemAdded = function(addedItem) {
-      addedItem.click(this.onItemClick);
-      return addedItem.mousemove(this.onItemMouseMove);
     };
 
     FiveC3.prototype.initPlayer = function(evnt) {
