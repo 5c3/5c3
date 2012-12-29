@@ -5,7 +5,7 @@
 {{?}}
 <div {{? it.status != 'upcoming'}} class=""{{?}}>
 	<h1>{{=it.title}}</h1>
-	<h2>{{=it.subtitle}}</h2>
+	<h2>{{=it.subtitle || ''}}</h2>
 	<dl>
 	  <dt>Speaker</dt>
 	  <dd>
@@ -15,9 +15,13 @@
 	  </dd>
 	  <dt>Track</dt>
 	  <dd>Hacking</dd>
-	  <dt>Description</dt>
-	  <dd>{{=it.description || ''}}</dd>
-	  <dt>Abstract</dt>
-	  <dd>{{=it.abstract || ''}}</dd>
+	  {{?it.description}}
+		  <dt>Description</dt>
+		  <dd>{{=it.description || ''}}</dd>
+	  {{?}}
+	  {{?it.abstract}}
+		  <dt>Abstract</dt>
+		  <dd>{{=it.abstract || ''}}</dd>
+	  {{?}}
 	</dl>
 </div>
