@@ -191,10 +191,14 @@
         if (lasttype === 'first') {
           console.log('first');
           item.extraclass = 'firstevent';
+        } else {
+          item.extraclass = '';
         }
         if (item.datatype === 'speaker') {
           if (lasttype === 'event') {
             item.extraclass = 'firstspeaker';
+          } else {
+            item.extraclass = '';
           }
           item.selectedValue = item.name;
         } else {
