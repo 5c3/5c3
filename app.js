@@ -18,7 +18,7 @@ var adminAuth = express.basicAuth(function(user,pwd) {
 
 //register view
 
-app.post(/viewcount\/(.+)/,adminAuth, function(req, res) {
+app.post(/viewcount\/(.+)/, function(req, res) {
     if (req.params[0]) {
         db.events.update({_id: req.params[0]}, { $inc: { popularity: 1 } }, function(err, saved) {
             if (err) res.send(500);
