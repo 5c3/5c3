@@ -58,13 +58,6 @@ class FiveC3
         # // Override the default behavior of all `a` elements so that, when
         # // clicked, their `href` value is pushed onto the history hash
         # // instead of being navigated to directly.
-        $("a").click( ->
-            href = $(this).attr( "href" )
-            # // Push this URL "state" onto the history hash.
-            # $.bbq.pushState({ url: href })
-            # // Prevent the default click behavior.
-            return false
-        )
          
         # // Bind a callback that executes when document.location.hash changes.
         $(window).bind( "hashchange", (e) =>
@@ -87,11 +80,6 @@ class FiveC3
                 @lastconference = url.conference
             
             @showItem(url.event)
-
-            console.log('URL:')
-            console.log(url)
-            console.log('Query:')
-            console.log(query)
             
 
 

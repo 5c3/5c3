@@ -67,11 +67,6 @@
 
     FiveC3.prototype.initBbq = function() {
       var _this = this;
-      $("a").click(function() {
-        var href;
-        href = $(this).attr("href");
-        return false;
-      });
       $(window).bind("hashchange", function(e) {
         var query, url;
         url = $.bbq.getState();
@@ -95,11 +90,7 @@
           }
           _this.lastconference = url.conference;
         }
-        _this.showItem(url.event);
-        console.log('URL:');
-        console.log(url);
-        console.log('Query:');
-        return console.log(query);
+        return _this.showItem(url.event);
       });
       return $(window).trigger("hashchange");
     };
