@@ -56,6 +56,9 @@
       }
       this.lastactiveitem = {};
       this.displayData = {};
+      $('.btn-navbar').bind('touchstart', function(e) {
+        return console.log(e);
+      });
       $('.conferenceFilter').click(this.onConferenceFilterClick);
       this.templates = {};
       templateFiles = ['item', 'items', 'popunder', 'typeahead'];

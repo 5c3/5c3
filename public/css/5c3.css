@@ -267,9 +267,10 @@ img{
 }
 
 
-.navbar .form-inline, .navbar .navbar-inner .btn-group, .navbar .navbar-search{
+.navbar .form-inline, .navbar .navbar-inner .btn-group, .navbar .navbar-search:not(.search-on-phone){
 	margin: 0px;
 }
+
 
 .navbar .btn-toolbar {
 	margin-top: 5px;

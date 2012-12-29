@@ -43,6 +43,10 @@ class FiveC3
             @columns = 5
         @lastactiveitem = {}
         @displayData = {} # Filtered and display ready data
+        $('.btn-navbar').bind('touchstart',
+            (e) ->
+                console.log(e)
+        )
 
         $('.conferenceFilter').click(@onConferenceFilterClick)
 
