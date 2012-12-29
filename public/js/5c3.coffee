@@ -51,10 +51,44 @@ class FiveC3
         @getTemplates(templateFiles)
         @refreshEventData( =>
             @filterEvents({conference:'29th Chaos Communication Congress'})
+            @initBbq()
         )
 
+    initBbq: () =>
+
+        # // Override the default behavior of all `a` elements so that, when
+        # // clicked, their `href` value is pushed onto the history hash
+        # // instead of being navigated to directly.
+        $("a").click( ->
+            href = $(this).attr( "href" )
+            # // Push this URL "state" onto the history hash.
+            $.bbq.pushState({ url: href })
+            # // Prevent the default click behavior.
+            return false
+        )
+         
+        # // Bind a callback that executes when document.location.hash changes.
+        $(window).bind( "hashchange", (e) =>
+            # // In jQuery 1.4, use e.getState( "url" );
+            url = $.bbq.getState();
+            query = $.deparam.querystring( window.location.search );
+            if url.event
+                @showItem(url.event)
+            console.log('URL:')
+            console.log(url)
+            console.log('Query:')
+            console.log(query)
+
+
+            # // You probably want to actually do something useful here..
+        ) 
+        # // Since the event is only triggered when the hash changes, we need
+        # // to trigger the event now, to handle the hash the page may have
+        # // loaded with.
+        $(window).trigger( "hashchange" )
+
+
     onClickConferenceFilter: (e) =>
-        e.stopPropagation()
         e.preventDefault()
         $('.conferenceFilter').removeClass('active')
         $(e.currentTarget).addClass('active')
@@ -273,27 +307,25 @@ class FiveC3
         
 
     onItemClick: (e) =>
-        console.log('click')
-        item = $(e.currentTarget)
+        jQuery.bbq.pushState({event:$(e.currentTarget).attr('data-event-id')})
+
+    showItem: (eventid) =>
+        console.log('Showing: ' + eventid)
+        item = $('[data-event-id=' + eventid + ']')
         item.id = item.attr('id')
         item.row = item.attr('data-row')
-        item._id = item.attr('data-event-id')
-        console.log(item.id)
-        console.log(@lastactiveitem.id)
-        if item.id != @lastactiveitem.id
-            console.log('A item was clicked that"s not the previous one')
-            $('.popundercontent').html('')
-            eventObject = @getEventById(item._id)
-            if item.row != @lastactiveitem.row
-                row = $('#row' + item.row)
-                lastRow = $('#row' + @lastactiveitem.row)
-                lastRow.css('max-height','0px')
-                row.css('max-height','500px')
-                $(window).scrollTop(row.position().top - 80)
+        $('.popundercontent').html('')
+        eventObject = @getEventById(eventid)
+        if item.row != @lastactiveitem.row
+            row = $('#row' + item.row)
+            lastRow = $('#row' + @lastactiveitem.row)
+            lastRow.css('max-height','0px')
+            row.css('max-height','500px')
+            $(window).scrollTop(row.position().top - 80)
 
-            top.replaceHtml('rowcontent_'+ item.row,@templates.popunder(eventObject))
-            @initPlayer(eventObject) 
-            @lastactiveitem = item      
+        top.replaceHtml('rowcontent_'+ item.row,@templates.popunder(eventObject))
+        @initPlayer(eventObject) 
+        @lastactiveitem = item      
 
     onItemMouseMove: (e) =>
         # 

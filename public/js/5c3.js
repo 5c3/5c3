@@ -29,6 +29,8 @@
 
       this.onItemMouseMove = __bind(this.onItemMouseMove, this);
 
+      this.showItem = __bind(this.showItem, this);
+
       this.onItemClick = __bind(this.onItemClick, this);
 
       this.getEventById = __bind(this.getEventById, this);
@@ -44,6 +46,8 @@
       this.typeaheadSource = __bind(this.typeaheadSource, this);
 
       this.onClickConferenceFilter = __bind(this.onClickConferenceFilter, this);
+
+      this.initBbq = __bind(this.initBbq, this);
 
       var templateFiles,
         _this = this;
@@ -61,15 +65,40 @@
       templateFiles = ['item', 'items', 'popunder', 'typeahead'];
       this.getTemplates(templateFiles);
       this.refreshEventData(function() {
-        return _this.filterEvents({
+        _this.filterEvents({
           conference: '29th Chaos Communication Congress'
         });
+        return _this.initBbq();
       });
     }
 
+    FiveC3.prototype.initBbq = function() {
+      var _this = this;
+      $("a").click(function() {
+        var href;
+        href = $(this).attr("href");
+        $.bbq.pushState({
+          url: href
+        });
+        return false;
+      });
+      $(window).bind("hashchange", function(e) {
+        var query, url;
+        url = $.bbq.getState();
+        query = $.deparam.querystring(window.location.search);
+        if (url.event) {
+          _this.showItem(url.event);
+        }
+        console.log('URL:');
+        console.log(url);
+        console.log('Query:');
+        return console.log(query);
+      });
+      return $(window).trigger("hashchange");
+    };
+
     FiveC3.prototype.onClickConferenceFilter = function(e) {
       var selectedConferenceTitle;
-      e.stopPropagation();
       e.preventDefault();
       $('.conferenceFilter').removeClass('active');
       $(e.currentTarget).addClass('active');
@@ -347,29 +376,29 @@
     };
 
     FiveC3.prototype.onItemClick = function(e) {
+      return jQuery.bbq.pushState({
+        event: $(e.currentTarget).attr('data-event-id')
+      });
+    };
+
+    FiveC3.prototype.showItem = function(eventid) {
       var eventObject, item, lastRow, row;
-      console.log('click');
-      item = $(e.currentTarget);
+      console.log('Showing: ' + eventid);
+      item = $('[data-event-id=' + eventid + ']');
       item.id = item.attr('id');
       item.row = item.attr('data-row');
-      item._id = item.attr('data-event-id');
-      console.log(item.id);
-      console.log(this.lastactiveitem.id);
-      if (item.id !== this.lastactiveitem.id) {
-        console.log('A item was clicked that"s not the previous one');
-        $('.popundercontent').html('');
-        eventObject = this.getEventById(item._id);
-        if (item.row !== this.lastactiveitem.row) {
-          row = $('#row' + item.row);
-          lastRow = $('#row' + this.lastactiveitem.row);
-          lastRow.css('max-height', '0px');
-          row.css('max-height', '500px');
-          $(window).scrollTop(row.position().top - 80);
-        }
-        top.replaceHtml('rowcontent_' + item.row, this.templates.popunder(eventObject));
-        this.initPlayer(eventObject);
-        return this.lastactiveitem = item;
+      $('.popundercontent').html('');
+      eventObject = this.getEventById(eventid);
+      if (item.row !== this.lastactiveitem.row) {
+        row = $('#row' + item.row);
+        lastRow = $('#row' + this.lastactiveitem.row);
+        lastRow.css('max-height', '0px');
+        row.css('max-height', '500px');
+        $(window).scrollTop(row.position().top - 80);
       }
+      top.replaceHtml('rowcontent_' + item.row, this.templates.popunder(eventObject));
+      this.initPlayer(eventObject);
+      return this.lastactiveitem = item;
     };
 
     FiveC3.prototype.onItemMouseMove = function(e) {};
