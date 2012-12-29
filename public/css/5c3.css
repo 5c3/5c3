@@ -253,7 +253,7 @@ img{
 
 
 
-.navbar .form-inline, .navbar .navbar-inner .btn-group{
+.navbar .form-inline, .navbar .navbar-inner .btn-group, .navbar .navbar-search{
 	margin: 0px;
 }
 
