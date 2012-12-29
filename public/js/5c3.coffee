@@ -49,7 +49,9 @@ class FiveC3
         @templates = {} # Contains the template functions
         templateFiles = ['item', 'items','popunder','typeahead'] # Provide a list of files to fetch. Leave .html away
         @getTemplates(templateFiles)
-        @refreshEventData()
+        @refreshEventData( =>
+            @filterEvents({conference:'29th Chaos Communication Congress'})
+        )
 
     onClickConferenceFilter: (e) =>
         e.stopPropagation()
@@ -57,7 +59,10 @@ class FiveC3
         $('.conferenceFilter').removeClass('active')
         $(e.currentTarget).addClass('active')
         selectedConferenceTitle = $(e.currentTarget).attr('data-conference-title')
-        @filterEvents({conference:selectedConferenceTitle})
+        if selectedConferenceTitle
+            @filterEvents({conference:selectedConferenceTitle})
+        else
+            @filterEvents()
 
 
 
@@ -230,7 +235,7 @@ class FiveC3
         @typeahead = $('.search-query').typeahead(typeaheadOptions)
      
 
-    refreshEventData: () ->
+    refreshEventData: (callback) ->
         $.ajax( 
             url:'/events'
             datatype: 'json'
@@ -243,7 +248,7 @@ class FiveC3
                         event.conferenceShort = '28c3'
                     if event.conference == '27th Chaos Communication Congress'
                         event.conferenceShort = '27c3'
-                @filterEvents()
+                callback()
             async: true
         )
         $.ajax( 
@@ -283,7 +288,7 @@ class FiveC3
                 row = $('#row' + item.row)
                 lastRow = $('#row' + @lastactiveitem.row)
                 lastRow.css('max-height','0px')
-                row.css('max-height','1200px')
+                row.css('max-height','500px')
                 $(window).scrollTop(row.position().top - 80)
 
             top.replaceHtml('rowcontent_'+ item.row,@templates.popunder(eventObject))

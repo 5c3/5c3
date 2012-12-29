@@ -45,7 +45,8 @@
 
       this.onClickConferenceFilter = __bind(this.onClickConferenceFilter, this);
 
-      var templateFiles;
+      var templateFiles,
+        _this = this;
       this.events = [];
       this.typeaheadStrings;
       if (screen.width < 767) {
@@ -59,7 +60,11 @@
       this.templates = {};
       templateFiles = ['item', 'items', 'popunder', 'typeahead'];
       this.getTemplates(templateFiles);
-      this.refreshEventData();
+      this.refreshEventData(function() {
+        return _this.filterEvents({
+          conference: '29th Chaos Communication Congress'
+        });
+      });
     }
 
     FiveC3.prototype.onClickConferenceFilter = function(e) {
@@ -69,9 +74,13 @@
       $('.conferenceFilter').removeClass('active');
       $(e.currentTarget).addClass('active');
       selectedConferenceTitle = $(e.currentTarget).attr('data-conference-title');
-      return this.filterEvents({
-        conference: selectedConferenceTitle
-      });
+      if (selectedConferenceTitle) {
+        return this.filterEvents({
+          conference: selectedConferenceTitle
+        });
+      } else {
+        return this.filterEvents();
+      }
     };
 
     FiveC3.prototype.typeaheadSource = function(query, callback) {
@@ -282,7 +291,7 @@
       return this.typeahead = $('.search-query').typeahead(typeaheadOptions);
     };
 
-    FiveC3.prototype.refreshEventData = function() {
+    FiveC3.prototype.refreshEventData = function(callback) {
       var _this = this;
       $.ajax({
         url: '/events',
@@ -303,7 +312,7 @@
               event.conferenceShort = '27c3';
             }
           }
-          return _this.filterEvents();
+          return callback();
         },
         async: true
       });
@@ -354,7 +363,7 @@
           row = $('#row' + item.row);
           lastRow = $('#row' + this.lastactiveitem.row);
           lastRow.css('max-height', '0px');
-          row.css('max-height', '1200px');
+          row.css('max-height', '500px');
           $(window).scrollTop(row.position().top - 80);
         }
         top.replaceHtml('rowcontent_' + item.row, this.templates.popunder(eventObject));
