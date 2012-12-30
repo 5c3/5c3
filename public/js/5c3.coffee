@@ -356,16 +356,23 @@ class FiveC3
         
     initPlayer: (evnt) =>
         
-        @player = new MediaElementPlayer($('video'), success: (mediaElement, domObject) =>
-            @activeEvent = evnt._id
-    
-            mediaElement.addEventListener "play", ((e) =>
-                @player.timer = setInterval("fiveC3.playcount()", 20000)
-            ), false
-            mediaElement.addEventListener "pause", ((e) =>
-                clearInterval(@player.timer)
-            ), false
+        @player = new MediaElementPlayer( 
+            $('video'), 
+            success: (mediaElement, domObject) ->
+                top.fiveC3.player = evnt._id
+        
+                mediaElement.addEventListener "play", ((e) ->
+                    top.fiveC3.player.timer = setInterval("fiveC3.playcount()", 20000)
+                ), false
+                mediaElement.addEventListener "pause", ((e) ->
+                    clearInterval(top.fiveC3.player.timer)
+                ), false
+            ,
+            error: (error) ->
+                console.log(error)
         )
+        # console.log($('.mejs-overlay-button'))
+        
     
     playcount: =>
         $.post "/viewcount/" + @activeEvent, (data) ->

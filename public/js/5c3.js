@@ -428,16 +428,18 @@
     };
 
     FiveC3.prototype.initPlayer = function(evnt) {
-      var _this = this;
       return this.player = new MediaElementPlayer($('video'), {
         success: function(mediaElement, domObject) {
-          _this.activeEvent = evnt._id;
+          top.fiveC3.player = evnt._id;
           mediaElement.addEventListener("play", (function(e) {
-            return _this.player.timer = setInterval("fiveC3.playcount()", 20000);
+            return top.fiveC3.player.timer = setInterval("fiveC3.playcount()", 20000);
           }), false);
           return mediaElement.addEventListener("pause", (function(e) {
-            return clearInterval(_this.player.timer);
+            return clearInterval(top.fiveC3.player.timer);
           }), false);
+        },
+        error: function(error) {
+          return console.log(error);
         }
       });
     };

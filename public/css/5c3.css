@@ -267,10 +267,19 @@ img{
 	padding-top: 20px;
 }
 
-@media (max-width: 767px) {
+@media (max-device-width: 767px) {
 	.player {
 		width: 100%;
 		padding-top: 0;
+	}
+	.popunder h1{
+		font-size: 1.6em;
+		line-height: 100%;
+		margin-bottom: 10px
+	}
+	.popunder h2{
+		font-size: 1.3em;
+		line-height: 100%;
 	}
 }
 
