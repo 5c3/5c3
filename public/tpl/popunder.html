@@ -1,6 +1,8 @@
 {{? it.status != 'upcoming'}}
-<div class="player">
-		<video src="{{=it.video}}" type="video/mp4" style="width:100%;height:100%" preload="none" poster="http://daten.der-begier.de/thumbs/{{=it._id}}/poster_640.jpg"></video>
+	{{? it.video }}
+		<div class="player">
+				<video src="{{=it.video}}" type="video/mp4" style="width:100%;height:100%" preload="none" poster="http://daten.der-begier.de/thumbs/{{=it._id}}/poster_640.jpg"></video>
+	{{?}}
 </div>
 {{?}}
 <div {{? it.status != 'upcoming'}} class=""{{?}}>
