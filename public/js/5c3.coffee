@@ -72,7 +72,7 @@ class FiveC3
             console.log(url.conference)
             if url.searchquery
                 console.log('Searching for ' + url.searchquery)
-                @filterEvents({title:url.searchquery,name:url.searchquery})
+                @filterEvents({title:url.searchquery,person:url.searchquery})
                 return
 
 
@@ -222,9 +222,13 @@ class FiveC3
                     return false
                 for k, v of @filterattributes
                     if k == 'person'
-                        for speaker in item.persons
-                            if speaker == v
-                                return true
+                        try 
+                            for speaker in item.persons
+                                if speaker == v
+                                    return true
+                        catch e
+                            continue
+                        
                     if item[k] == v
                         return true
                 return false

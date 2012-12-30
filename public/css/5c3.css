@@ -284,12 +284,18 @@ img{
 }
 
 
-.navbar .form-inline, .navbar .navbar-inner .btn-group, .navbar .navbar-search:not(.search-on-phone){
+.navbar .form-inline, .navbar .navbar-inner .btn-group {
 	margin: 0px;
 }
 
+.navbar-search {
+	z-index: 100;
+}
 
 .navbar .btn-toolbar {
 	margin-top: 5px;
 	margin-bottom: 5px;
+}
+#arrrrrrrrr {
+	margin: 0px 10px;
 }
