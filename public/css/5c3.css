@@ -3,12 +3,12 @@ body{
 }
 
 
-@media (max-width: 767px) {
+/*@media (max-width: 767px) {
 	body {
 		padding-left: 10px !important;
 		padding-right: 10px !important;
 	}
-}
+}*/
 
 img{
 	border: 0px;
