@@ -363,7 +363,7 @@ class FiveC3
         @player = new MediaElementPlayer( 
             $('video'), 
             success: (mediaElement, domObject) ->
-                top.fiveC3.player = evnt._id
+                top.fiveC3.activeEvent = evnt._id
         
                 mediaElement.addEventListener "play", ((e) ->
                     top.fiveC3.player.timer = setInterval("fiveC3.playcount()", 20000)

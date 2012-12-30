@@ -434,7 +434,7 @@
     FiveC3.prototype.initPlayer = function(evnt) {
       return this.player = new MediaElementPlayer($('video'), {
         success: function(mediaElement, domObject) {
-          top.fiveC3.player = evnt._id;
+          top.fiveC3.activeEvent = evnt._id;
           mediaElement.addEventListener("play", (function(e) {
             return top.fiveC3.player.timer = setInterval("fiveC3.playcount()", 20000);
           }), false);
