@@ -51,7 +51,7 @@ class FiveC3
         $('.conferenceFilter').click(@onConferenceFilterClick)
 
         @templates = {} # Contains the template functions
-        templateFiles = ['item', 'items','popunder','typeahead'] # Provide a list of files to fetch. Leave .html away
+        templateFiles = ['item', 'items','popunder','typeahead','itemsIsotope'] # Provide a list of files to fetch. Leave .html away
         @getTemplates(templateFiles)
         @refreshEventData( =>
             @initBbq()
@@ -79,6 +79,10 @@ class FiveC3
             if !url.conference
                 jQuery.bbq.pushState({conference:'29th Chaos Communication Congress'})
                 return
+
+            if url.sizeBy == 'popularity'
+                @showEventsBySize('popularity')
+                return 
 
             if @lastconference != url.conference
                 if url.conference == 'Alle'
@@ -117,6 +121,10 @@ class FiveC3
         console.log('Click')
         state = jQuery.bbq.getState()
         jQuery.bbq.pushState({event:$(e.currentTarget).attr('data-event-id'),conference:state.conference},2)
+
+    onPopularSizeClick: (e) =>
+        console.log('Click Popular Size')
+        jQuery.bbq.pushState({sizeBy:'popularity'},2)
 
 
 
@@ -211,6 +219,22 @@ class FiveC3
         # if typeof(item.name) == 'string'
         #     return item.name
 
+    showEventsBySize: (sizeCriteria) =>
+        sortedData = @events.slice(0)
+        sortedData.sort( (a,b) ->
+            if (a.popularity > b.popularity)
+                return -1
+            if (a.popularity < b.popularity)
+                return 1
+            return 0
+            )
+
+        limitedEvents = sortedData.slice(0,14)
+        console.log(limitedEvents)
+        for event in limitedEvents
+            console.log(event.popularity)
+        @displayEventsInGrid(limitedEvents)
+
     filterEvents: (filterattributes) =>
         @filterattributes = filterattributes
         console.log('Filter Attributes:')
@@ -242,14 +266,17 @@ class FiveC3
                 return 1
             return 0
         )
+        @displayEventsInGrid(filteredData)
 
+    displayEventsInGrid: (events) =>
         # Prepare the datastructure for display
         i = 0 # Item Number
         j = 0 # Row Number
         @displayData.rows = []
         @displayData.rows[0] = []
         @displayData.rows[0].rownumber = 0
-        for item in filteredData
+        console.log(events)
+        for item in events
             item.number = i
             item.row = j
             @displayData.rows[j].push(item)
@@ -285,8 +312,9 @@ class FiveC3
             #     touchDelay: 500
             # })
             item.bind("click",top.fiveC3.onItemClick)
-
         )
+        $('.popularTalks').bind("click",top.fiveC3.onPopularSizeClick)
+
         typeaheadOptions = {
             source: @typeaheadSource
             matcher: @typeaheadMatcher
@@ -304,6 +332,8 @@ class FiveC3
             success: (dataFromServer) =>
                 @events = dataFromServer
                 for event in @events
+                    if not event.popularity
+                        event.popularity = 0
                     if event.conference == '29th Chaos Communication Congress'
                         event.conferenceShort = '29c3'
                     if event.conference == '28th Chaos Communication Congress'
